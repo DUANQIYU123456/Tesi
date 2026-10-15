@@ -16,8 +16,19 @@ public class TransitionPoint : MonoBehaviour
 
     private readonly HashSet<Collider> playerColliders = new HashSet<Collider>();
 
+    public bool CanInteract
+    {
+        get
+        {
+            playerColliders.RemoveWhere(collider => collider == null || !collider.enabled || !collider.gameObject.activeInHierarchy);
+            return isActiveAndEnabled && playerColliders.Count > 0;
+        }
+    }
+
     private void Update()
     {
+        // The shared HUD chooses exactly one target and consumes E once.
+        if (Xiaoduan.Narrative.NarrativeInteractor.HasActiveInterface) return;
         playerColliders.RemoveWhere(collider => collider == null || !collider.enabled || !collider.gameObject.activeInHierarchy);
         if (playerColliders.Count == 0) return;
 
