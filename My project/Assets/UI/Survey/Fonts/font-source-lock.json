@@ -1,0 +1,30 @@
+{
+  "repository": "https://github.com/IBM/plex",
+  "commit": "48e8676114c04f29033b4b53da4ec579f8846297",
+  "files": [
+    {
+      "file": "IBMPlexMono-Medium.ttf",
+      "bytes": 174008,
+      "sha256": "98fbd727aae340b236955879dabed4d991aac9e8e90b3b2a67ce4a59221cc97c",
+      "git_blob": "7d991ea74c3cf8097c4a5313989c9f0cd11c3b0a"
+    },
+    {
+      "file": "IBMPlexSans-Regular.ttf",
+      "bytes": 200500,
+      "sha256": "975dcda37d80f038dcd143c22e33ca2d97a0cc5a929aace1c749153b0fe1afa5",
+      "git_blob": "bd6817d5202895da5ac4fad88de3da71e652881a"
+    },
+    {
+      "file": "IBMPlexSans-SemiBold.ttf",
+      "bytes": 202632,
+      "sha256": "a20caf8286023a6a7a85e40b1d2a4ae9fc3e3b1f9eda8f4c542dd4986af67bb1",
+      "git_blob": "09ec8cdae8208c26165db0c87da409cda8c26ae4"
+    },
+    {
+      "file": "OFL.txt",
+      "bytes": 4456,
+      "sha256": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+      "git_blob": "c35c4c618fab33da8695177b3a6cefe0810b7b28"
+    }
+  ]
+}

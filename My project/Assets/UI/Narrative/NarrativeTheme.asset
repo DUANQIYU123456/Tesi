@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bbb429f2dec4f241a4b60ecfd885b08, type: 3}
   m_Name: NarrativeTheme
   m_EditorClassIdentifier: Assembly-CSharp::Xiaoduan.Narrative.NarrativeTheme
-  font: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  text: {r: 0.94, g: 0.93, b: 0.86, a: 1}
-  muted: {r: 0.64, g: 0.69, b: 0.65, a: 1}
-  accent: {r: 0.55, g: 0.91, b: 0.47, a: 1}
+  font: {fileID: 11400000, guid: 31fdfecd15802c948925eac19609e2f0, type: 2}
+  text: {r: 0.83, g: 0.89, b: 0.86, a: 1}
+  muted: {r: 0.48, g: 0.59, b: 0.54, a: 1}
+  accent: {r: 0.49, g: 0.88, b: 0.65, a: 1}
   panel: {r: 0.035, g: 0.055, b: 0.048, a: 0.96}
   enterLabel: Enter
   examineLabel: Examine
@@ -26,7 +26,7 @@ MonoBehaviour:
   returnLabel: E / ESC  -  Return to exploration
   room1Label: 01  /  THE TOWN
   room2Label: 02  /  THE PRISON
-  introLabel: WASD  Move     MOUSE  Look     E  Interact
+  introLabel: 
   fadeSeconds: 0.22
   promptSize: 30
   captionSize: 20

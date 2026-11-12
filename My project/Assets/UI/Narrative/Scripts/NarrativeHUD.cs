@@ -13,7 +13,6 @@ namespace Xiaoduan.Narrative
         public UnityEngine.UI.Image dot;
         public CanvasGroup focusGroup;
         bool showPrompt,showReading,focused;
-        float introUntil;
         Rect lastSafe;
         Vector2Int lastSize;
         Vector2 lastSafeSize;
@@ -24,11 +23,10 @@ namespace Xiaoduan.Narrative
             promptGroup.alpha=0; readingGroup.alpha=0;
             readingGroup.blocksRaycasts=false; readingGroup.interactable=false;
             roomText.text=gameObject.scene.name=="ROOM1" ? theme.room1Label : theme.room2Label;
-            introText.text=theme.introLabel;
+            if(introText!=null)introText.text="";
             closeText.text=theme.closeLabel+"  [ESC]";
             returnText.text=theme.returnLabel;
-            introUntil=Time.unscaledTime+(gameObject.scene.name=="ROOM1" ? 7f : 0f);
-            introGroup.alpha=0;
+            if(introGroup!=null)introGroup.gameObject.SetActive(false);
             Layout();
         }
         void Start() { Layout(); }
@@ -45,7 +43,7 @@ namespace Xiaoduan.Narrative
             cardCategory.fontSize=theme.captionSize; cardCategory.color=theme.accent;
             closeText.fontSize=theme.captionSize;
             returnText.fontSize=theme.captionSize; returnText.color=theme.muted;
-            introText.fontSize=theme.captionSize;
+            if(introText!=null)introText.fontSize=theme.captionSize;
             roomText.fontSize=theme.captionSize; roomText.color=theme.text;
             foreach (var graphic in GetComponentsInChildren<UnityEngine.UI.Image>(true))
             {
@@ -78,7 +76,7 @@ namespace Xiaoduan.Narrative
             float step=Time.unscaledDeltaTime/Mathf.Max(.05f,theme.fadeSeconds);
             promptGroup.alpha=Mathf.MoveTowards(promptGroup.alpha,showPrompt && !showReading ? 1:0,step);
             readingGroup.alpha=Mathf.MoveTowards(readingGroup.alpha,showReading ? 1:0,step);
-            introGroup.alpha=Mathf.MoveTowards(introGroup.alpha,Time.unscaledTime<introUntil && !showReading && !showPrompt ? 1:0,step);
+            if(introGroup!=null)introGroup.gameObject.SetActive(false);
             focusGroup.alpha=Mathf.MoveTowards(focusGroup.alpha,focused && !showReading ? 1:0,step);
             dot.enabled=!showReading;
             dot.color=Color.Lerp(dot.color,focused ? theme.accent : theme.muted,Time.unscaledDeltaTime*10);

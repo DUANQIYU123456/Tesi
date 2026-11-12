@@ -44,6 +44,7 @@ namespace Xiaoduan.Narrative
         void Update()
         {
             if (Time.unscaledTime>=nextRefresh || playerCamera==null || player==null) Refresh();
+            if (Xiaoduan.Survey.SurveyHUD.BlocksWorld) { ClearTarget(); return; }
             bool use=Keyboard.current!=null && Keyboard.current.eKey.wasPressedThisFrame;
             bool close=Keyboard.current!=null && Keyboard.current.escapeKey.wasPressedThisFrame;
             if (IsReading)
@@ -90,7 +91,7 @@ namespace Xiaoduan.Narrative
                 float score=(1-dot)*20+distance*.1f;
                 if (score<best) { best=score; selectedObject=item; }
             }
-            if (selectedPortal!=null) view.SetPrompt(view.theme.enterLabel,view.theme.portalTitle);
+            if (selectedPortal!=null) view.SetPrompt(gameObject.scene.name=="ROOM1" && selectedPortal.sceneName=="ROOM2" ? "Execute data cleanup" : view.theme.enterLabel,view.theme.portalTitle);
             else if (selectedObject!=null) view.SetPrompt(view.theme.examineLabel,selectedObject.entry.title);
             else view.SetPrompt("","");
             view.SetFocus(selectedPortal!=null || selectedObject!=null);
@@ -119,10 +120,12 @@ namespace Xiaoduan.Narrative
             {
                 var destination=selectedPortal;
                 ClearTarget();
+                if (Xiaoduan.Survey.SurveyHUD.EnterPortal(destination)) return;
                 SceneController.GetOrCreate().TransitionToDestination(destination);
             }
             else if (selectedObject!=null && selectedObject.CanInspect)
             {
+                if (Xiaoduan.Survey.SurveyHUD.TryOpenInspectable(selectedObject)) return;
                 openedObject=selectedObject;
                 LockInput();
                 IsReading=true;

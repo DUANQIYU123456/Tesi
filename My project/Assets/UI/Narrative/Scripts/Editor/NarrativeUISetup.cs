@@ -228,9 +228,7 @@ public static class NarrativeUISetup
         Text(Stretch("Letter",key,Vector2.zero,Vector2.zero),theme,"E",21,theme.text,TextAlignmentOptions.Center);
         hud.promptAction=Text(Rect("Action",prompt,new Vector2(0,.5f),new Vector2(0,.5f),new Vector2(510,30),new Vector2(88,12)),theme,"Enter",24,theme.text);
         hud.promptTitle=Text(Rect("Target",prompt,new Vector2(0,.5f),new Vector2(0,.5f),new Vector2(510,24),new Vector2(88,-16)),theme,"The light beyond",16,theme.muted);
-        var intro=Rect("Controls",safe,new Vector2(.5f,0),new Vector2(.5f,0),new Vector2(850,32),new Vector2(0,48));
-        hud.introGroup=intro.gameObject.AddComponent<CanvasGroup>(); hud.introGroup.blocksRaycasts=false;
-        hud.introText=Text(Stretch("Text",intro,Vector2.zero,Vector2.zero),theme,theme.introLabel,16,theme.text,TextAlignmentOptions.Center);
+        hud.introGroup=null;hud.introText=null;
         var reading=Stretch("Observation Overlay",safe,Vector2.zero,Vector2.zero);
         hud.readingGroup=reading.gameObject.AddComponent<CanvasGroup>(); hud.readingGroup.alpha=0;
         hud.readingGroup.blocksRaycasts=false; hud.readingGroup.interactable=false;

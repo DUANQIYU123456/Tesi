@@ -28,7 +28,7 @@ public class TransitionPoint : MonoBehaviour
     private void Update()
     {
         // The shared HUD chooses exactly one target and consumes E once.
-        if (Xiaoduan.Narrative.NarrativeInteractor.HasActiveInterface) return;
+        if (Xiaoduan.Narrative.NarrativeInteractor.HasActiveInterface || Xiaoduan.Survey.SurveyHUD.BlocksWorld) return;
         playerColliders.RemoveWhere(collider => collider == null || !collider.enabled || !collider.gameObject.activeInHierarchy);
         if (playerColliders.Count == 0) return;
 

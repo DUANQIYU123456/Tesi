@@ -28,6 +28,7 @@ public sealed class SpatialScanEvent : MonoBehaviour
     public AudioClip crossingSound;
 
     public static SpatialScanEvent Active { get; private set; }
+    public static event System.Action<SpatialScanEvent> CameraCrossed;
     public Camera ScanCamera { get; private set; }
     public bool IsScanning { get; private set; }
     bool played;
@@ -48,7 +49,7 @@ public sealed class SpatialScanEvent : MonoBehaviour
     UniversalAdditionalCameraData cameraData;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { Active = null; Shader.SetGlobalFloat("_XDScanFade",0f); Shader.SetGlobalFloat("_XDScanShock",0f); }
+    static void ResetStatics() { Active = null; CameraCrossed = null; Shader.SetGlobalFloat("_XDScanFade",0f); Shader.SetGlobalFloat("_XDScanShock",0f); }
 
     void OnTriggerEnter(Collider other)
     {
@@ -119,6 +120,7 @@ public sealed class SpatialScanEvent : MonoBehaviour
             if (!cameraCrossed && CrossedPlane(previousSide,side))
             {
                 cameraCrossed = true;
+                CameraCrossed?.Invoke(this);
                 if (screenShockEnabled) shockRemaining = Mathf.Max(0.01f,shockDuration);
                 if (scanAudio != null && crossingSound != null) scanAudio.PlayOneShot(crossingSound,0.65f);
                 Debug.Log("[SpatialScan] Green wave crossed gameplay camera; shock duration=" + shockDuration,this);
