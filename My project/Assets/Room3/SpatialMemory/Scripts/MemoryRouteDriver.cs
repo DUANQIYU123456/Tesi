@@ -39,6 +39,12 @@ namespace Xiaoduan.Room3
             yield return new WaitForSecondsRealtime(.25f);
             Verify(Mathf.Abs(player.position.x-80)<.8f&&Vector3.Dot(player.forward,Vector3.forward)>.99f,"Entry maps position and forward direction into the repeated corridor");
             Verify(memory.RenderedViews>0&&!memory.RenderingFailed,"URP portal views render through the mapped opening");
+            yield return new WaitForSecondsRealtime(2);
+            Face(player,input,memory.repetition.transform.position);yield return new WaitForSecondsRealtime(.2f);
+            int.TryParse(SurveyHUD.Instance.cpm.text.Split('\n')[0],out int facingReading);
+            Face(player,input,new Vector3(80,1.5f,-45));yield return new WaitForSecondsRealtime(.2f);
+            int.TryParse(SurveyHUD.Instance.cpm.text.Split('\n')[0],out int awayReading);
+            Verify(facingReading>awayReading+50&&!SurveyHUD.Instance.cpm.text.Contains("OVERFLOW"),"Overflow expires and the ROOM3 meter responds to viewing direction");
             move=MoveUntil(player,input,new Vector3(80,1.5f,-30),()=>!memory.Inside,4);
             while(move.MoveNext())yield return move.Current;
             Verify(Mathf.Abs(player.position.x)<.8f&&player.position.z<0,"Turning back through the arrival threshold restores the original corridor");
@@ -55,6 +61,8 @@ namespace Xiaoduan.Room3
                 Verify(player.position.z< -18&&memory.Inside,"Repetition "+expected+" returns through the same corridor without loading another scene");
             }
             int views=memory.RenderedViews,passes=memory.Traversals;var pause=UnityEngine.Object.FindFirstObjectByType<SurveyPause>();
+            var witness=memory.GetComponentInChildren<RepeatedDialWitness>();
+            Verify(witness!=null&&witness.firstCrack.activeSelf&&witness.secondCrack.activeSelf,"The fixed inspection dial visibly changes across both repetitions");
             pause.Open();yield return new WaitForSecondsRealtime(.25f);
             Verify(memory.RenderedViews==views&&memory.Traversals==passes,"Pause freezes portal rendering and traversal");pause.Resume();
             move=MoveUntil(player,input,new Vector3(80,1.5f,5),()=>player.position.z>=-10.1f,8);
@@ -69,10 +77,13 @@ namespace Xiaoduan.Room3
             while(!memory.RecordDecoded&&Time.realtimeSinceStartup<until){InputSystem.QueueStateEvent(Keyboard.current,new KeyboardState(Key.F));yield return null;}
             InputSystem.QueueStateEvent(Keyboard.current,new KeyboardState());yield return null;
             Verify(memory.RecordDecoded&&memory.repetition.linked==memory.release,"Holding F retains the comparison and changes the exit connection");
+            Verify(UnityEngine.Object.FindFirstObjectByType<SurveyAudioFocus>().WorldGain<.4f,"World sound is reduced during archive reading");
             SurveyTypography.Instance.SetLargeText(true);yield return null;Canvas.ForceUpdateCanvases();
             Verify(!flow.ui.greenText.isTextOverflowing&&!flow.ui.archiveSource.isTextOverflowing,"Labor research and sources fit the large-text reader");
             if(captures!=""){ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(captures,"Memory-ledger-large.png"));yield return null;}
             SurveyTypography.Instance.SetLargeText(false);flow.CloseArchive();
+            yield return new WaitForSecondsRealtime(.35f);
+            Verify(UnityEngine.Object.FindFirstObjectByType<SurveyAudioFocus>().WorldGain>.95f,"Closing the reader restores the world sound mix");
             Verify(player.GetComponent<PlayerInput>().inputIsActive,"Closing the labor reader restores exploration input");
             move=MoveUntil(player,input,new Vector3(80,1.5f,12),()=>!memory.Inside,9);
             while(move.MoveNext())yield return move.Current;

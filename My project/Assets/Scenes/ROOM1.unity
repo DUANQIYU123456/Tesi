@@ -5567,15 +5567,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2494988336520585677, guid: bcc70a65246261e43bdad2825ba7a2a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.997
+      value: -18
       objectReference: {fileID: 0}
     - target: {fileID: 2494988336520585677, guid: bcc70a65246261e43bdad2825ba7a2a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.56
+      value: 5.53
       objectReference: {fileID: 0}
     - target: {fileID: 2494988336520585677, guid: bcc70a65246261e43bdad2825ba7a2a3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -20.82
+      value: -21.02
       objectReference: {fileID: 0}
     - target: {fileID: 2494988336520585677, guid: bcc70a65246261e43bdad2825ba7a2a3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -31097,6 +31097,7 @@ Transform:
   - {fileID: 1425330440}
   - {fileID: 2033975449}
   - {fileID: 2057585628}
+  - {fileID: 2079151009}
   m_Father: {fileID: 1352222409}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1682111498
@@ -39420,6 +39421,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e15e7e99b78c1874db16b3b3882ff6f5, type: 3}
+--- !u!4 &2079151009 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+  m_PrefabInstance: {fileID: 8095440104526947488}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2079552915
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40896,6 +40902,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TransitionDestination
   destinationTag: 1
+--- !u!1001 &8095440104526947488
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1677849928}
+    m_Modifications:
+    - target: {fileID: 888367481259739106, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_Name
+      value: Undark 1921 - Torn Wall Poster
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2.381579
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2.381579
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2.381579
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -18.007
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -20.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.49980065
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.5002006
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5001981
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.49980044
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4625048487657092889, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ff87707e666017d43b37ee780c031ed6, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

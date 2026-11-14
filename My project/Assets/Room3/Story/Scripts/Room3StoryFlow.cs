@@ -188,10 +188,10 @@ namespace Xiaoduan.Room3
         void UpdateSound()
         {
             float mix=WorkerView?1:0;
-            clockSource.volume=Mathf.MoveTowards(clockSource.volume,WorkerView? .07f:.14f,Time.deltaTime*.15f);
-            clickSource.volume=Mathf.MoveTowards(clickSource.volume,mix*.2f,Time.deltaTime*.2f);
-            geigerSource.volume=Mathf.MoveTowards(geigerSource.volume,mix*(Reading? .07f:.11f),Time.deltaTime*.2f);
-            heartbeatSource.volume=Mathf.MoveTowards(heartbeatSource.volume,OathOpened? .22f:0,Time.deltaTime*.18f);
+            clockSource.volume=Mathf.MoveTowards(clockSource.volume,WorkerView? .045f:.09f,Time.deltaTime*.15f);
+            clickSource.volume=Mathf.MoveTowards(clickSource.volume,mix*.11f,Time.deltaTime*.2f);
+            geigerSource.volume=Mathf.MoveTowards(geigerSource.volume,mix*.055f,Time.deltaTime*.2f);
+            heartbeatSource.volume=Mathf.MoveTowards(heartbeatSource.volume,OathOpened? .13f:0,Time.deltaTime*.18f);
         }
         public void SetReducedMotion(bool value){ReducedMotion=value;if(cameraInterference!=null)cameraInterference.reducedMotion=value;}
         void LimitOathPitch(bool limit)

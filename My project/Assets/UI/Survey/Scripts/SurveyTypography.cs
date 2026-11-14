@@ -10,7 +10,7 @@ namespace Xiaoduan.Survey
 {
     public sealed class SurveyTypography:MonoBehaviour
     {
-        public TMP_FontAsset bodyFont,titleFont,instrumentFont;
+        public TMP_FontAsset bodyFont,titleFont,instrumentFont,displayFont;
         public bool LargeText {get;private set;}
         readonly Dictionary<TMP_Text,float> sizes=new Dictionary<TMP_Text,float>();
         Room3StoryUI story;
@@ -29,11 +29,18 @@ namespace Xiaoduan.Survey
             foreach(var text in FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include,FindObjectsSortMode.None))
             {
                 if(!sizes.ContainsKey(text))sizes[text]=text.fontSize;
+                bool display=displayFont!=null&&(text.name=="Project title"||text.name=="Pause title"||(story!=null&&text==story.endingTitle));
                 var font=text==hud.cpm||text==hud.traceCount||text==hud.integrity||text==hud.reducedText||System.Array.IndexOf(hud.fragments,text)>=0||text.name.StartsWith("Index ")?instrumentFont:
                     text==hud.roomLabel||sizes[text]>=30||text.name.Contains("title")||text.name.Contains("Title")||text.GetComponentInParent<UnityEngine.UI.Button>()!=null?titleFont:bodyFont;
+                if(display)font=displayFont;
                 if(text.font!=font){text.font=font;text.fontSharedMaterial=font.material;}
                 text.enableAutoSizing=false;
                 float baseline=sizes[text];
+                if(display)
+                {
+                    text.fontStyle=FontStyles.Normal;text.characterSpacing=0;
+                    baseline=text.name=="Project title"?100:text.name=="Pause title"?52:56;
+                }
                 if(text==hud.truthText)baseline=26;
                 if(text==hud.sourceText)baseline=18;
                 if(text==hud.officialText)baseline=24;

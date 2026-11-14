@@ -4836,6 +4836,7 @@ GameObject:
   - component: {fileID: 6023154870296989975}
   - component: {fileID: 8977147752755401958}
   - component: {fileID: 8119051137971406655}
+  - component: {fileID: 8287804202143280644}
   m_Layer: 0
   m_Name: SurveyInterface
   m_TagString: Untagged
@@ -5020,6 +5021,7 @@ MonoBehaviour:
   bodyFont: {fileID: 11400000, guid: 31fdfecd15802c948925eac19609e2f0, type: 2}
   titleFont: {fileID: 11400000, guid: 7a661fae105586c439fa4b5ccbdfbaa2, type: 2}
   instrumentFont: {fileID: 11400000, guid: f204c11e77f21b5429b2fb5e6a83ba9a, type: 2}
+  displayFont: {fileID: 11400000, guid: 4163ac26bf810dd4282c9c923ef48ad5, type: 2}
 --- !u!114 &8119051137971406655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5043,6 +5045,18 @@ MonoBehaviour:
   readingLabel: {fileID: 5061027216031963778}
   volumeLabel: {fileID: 8709562698801677903}
   sensitivityLabel: {fileID: 41007972484894458}
+--- !u!114 &8287804202143280644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3952348593976267643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a70c7c0267578242b79abb853571ac3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Xiaoduan.Survey.SurveyAudioFocus
 --- !u!1 &4006566423572975544
 GameObject:
   m_ObjectHideFlags: 0
@@ -7692,10 +7706,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SURVEY PAUSED
+  m_text: Inspection paused
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7a661fae105586c439fa4b5ccbdfbaa2, type: 2}
-  m_sharedMaterial: {fileID: 3766956489070688187, guid: 7a661fae105586c439fa4b5ccbdfbaa2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4163ac26bf810dd4282c9c923ef48ad5, type: 2}
+  m_sharedMaterial: {fileID: 5519368352197125348, guid: 4163ac26bf810dd4282c9c923ef48ad5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7719,8 +7733,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
-  m_fontSizeBase: 42
+  m_fontSize: 52
+  m_fontSizeBase: 52
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -11326,8 +11340,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -260, y: 190}
-  m_SizeDelta: {x: 920, y: 210}
+  m_AnchoredPosition: {x: -260, y: 180}
+  m_SizeDelta: {x: 920, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3255422514429168071
 CanvasRenderer:
@@ -11357,12 +11371,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'LUCE VERDE
+  m_text: 'Luce Verde
 
-    NELLE OSSA'
+    nelle Ossa'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7a661fae105586c439fa4b5ccbdfbaa2, type: 2}
-  m_sharedMaterial: {fileID: 3766956489070688187, guid: 7a661fae105586c439fa4b5ccbdfbaa2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4163ac26bf810dd4282c9c923ef48ad5, type: 2}
+  m_sharedMaterial: {fileID: 5519368352197125348, guid: 4163ac26bf810dd4282c9c923ef48ad5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -11386,8 +11400,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 76
-  m_fontSizeBase: 76
+  m_fontSize: 100
+  m_fontSizeBase: 100
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -11396,7 +11410,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 1.5
+  m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

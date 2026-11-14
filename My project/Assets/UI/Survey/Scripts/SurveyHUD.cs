@@ -60,6 +60,8 @@ namespace Xiaoduan.Survey
         bool focusing;
         int identityMask=-1;
         float nextRadar;
+        bool workerObserved;
+        float workerOverflowUntil;
         string guidance="";
         public string Guidance=>guidance;
         public bool GateHintVisible {get;private set;}
@@ -106,7 +108,7 @@ namespace Xiaoduan.Survey
                 StyleStory(story.ui);
             }
             ApplyReducedMotion();
-            tuning=0;soundTarget=null;scanWasActive=false;identityMask=-1;nextRadar=0;
+            tuning=0;soundTarget=null;scanWasActive=false;identityMask=-1;nextRadar=0;workerObserved=false;workerOverflowUntil=0;
             roomLabel.text=scene=="ROOM1"?"01 / THE TOWN":scene=="ROOM2"?"02 / THE PRISON":"03 / THE BLACK BOX ARCHIVE";
             if(scene!="ROOM1")SurveyProgress.Started=true;
             menuConsidered=false;
@@ -166,8 +168,8 @@ namespace Xiaoduan.Survey
             {
                 bool show=!storyModal&&story.BridgeLocked&&!story.OathOpened&&player!=null&&Vector3.Distance(player.position,story.oathPoint.position)<4.2f;
                 oath.SetActive(show);oathFill.fillAmount=story.OathProgress;
-                if(story.WorkerView)cpm.text="9999\n<color=#70F7A2>OVERFLOW</color>";
-                else if(!storyModal)cpm.text="0000\nCLEANROOM";
+                if(story.WorkerView&&!workerObserved){workerObserved=true;workerOverflowUntil=Time.time+1.8f;}
+                if(!storyModal&&Time.time<workerOverflowUntil)cpm.text="9999\n<color=#70F7A2>OVERFLOW</color>";
             }
             UpdateScanner();
             shock=Mathf.MoveTowards(shock,0,Time.unscaledDeltaTime*2);
@@ -217,9 +219,10 @@ namespace Xiaoduan.Survey
             if(story!=null&&!story.EndingChosen)
             {
                 found=true;
-                if(!story.WorkerView){position=new Vector3(5.5f,1.5f,-15.5f);guidance="OBSERVATION BREACH";}
+                if(story.recursiveArchive!=null&&story.recursiveArchive.Inside){position=story.recursiveArchive.RecordDecoded?story.recursiveArchive.repetition.transform.position:story.recursiveArchive.GuidePosition;guidance=story.recursiveArchive.RecordDecoded?"RELEASED THRESHOLD":story.recursiveArchive.Guidance;}
+                else if(!story.WorkerView){position=new Vector3(5.5f,1.5f,-15.5f);guidance="OBSERVATION BREACH";}
                 else if(!story.MedicalDecoded){position=story.nodes.First(n=>n.kind==Room3StoryNode.Kind.MedicalRecord).focus.position;guidance="MEDICAL TRACE";}
-                else if(story.recursiveArchive!=null&&story.recursiveArchive.Inside){position=story.recursiveArchive.RecordDecoded?story.recursiveArchive.repetition.transform.position:story.recursiveArchive.GuidePosition;guidance=story.recursiveArchive.RecordDecoded?"RELEASED THRESHOLD":story.recursiveArchive.Guidance;}
+                
                 else if(story.recursiveArchive!=null&&!story.recursiveArchive.RecordDecoded){position=story.recursiveArchive.portals[0].transform.position;guidance="REPEATED ARCHIVE";}
                 else if(!story.BridgeLocked){position=story.calibrationPoint.position+Vector3.up;guidance="BRIDGE CALIBRATION";}
                 else if(!story.CourtDecoded){position=story.nodes.First(n=>n.kind==Room3StoryNode.Kind.CourtRecord).focus.position;guidance="COURT ARCHIVE";}
