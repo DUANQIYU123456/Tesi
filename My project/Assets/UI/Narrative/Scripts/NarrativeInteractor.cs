@@ -91,7 +91,7 @@ namespace Xiaoduan.Narrative
                 float score=(1-dot)*20+distance*.1f;
                 if (score<best) { best=score; selectedObject=item; }
             }
-            if (selectedPortal!=null) view.SetPrompt(gameObject.scene.name=="ROOM1" && selectedPortal.sceneName=="ROOM2" ? "Execute data cleanup" : view.theme.enterLabel,view.theme.portalTitle);
+            if (selectedPortal!=null) view.SetPrompt(gameObject.scene.name=="ROOM1" && selectedPortal.sceneName=="ROOM2" ? "FORMAT ANOMALY" : view.theme.enterLabel,view.theme.portalTitle);
             else if (selectedObject!=null) view.SetPrompt(view.theme.examineLabel,selectedObject.entry.title);
             else view.SetPrompt("","");
             view.SetFocus(selectedPortal!=null || selectedObject!=null);

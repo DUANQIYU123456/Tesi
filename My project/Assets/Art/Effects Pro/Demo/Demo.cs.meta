@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: e187b2a465e165b45bb8dfefe7934da2
+timeCreated: 1615105418
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 191099
+  packageName: 'Effects Pro: Simple Image Effects'
+  packageVersion: 1.0.0
+  assetPath: Assets/Effects Pro/Demo/Demo.cs
+  uploadId: 423829

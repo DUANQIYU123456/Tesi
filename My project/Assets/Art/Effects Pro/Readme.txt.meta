@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2f3cf887f73f9b04f9aa7963b5ff791a
+timeCreated: 1615223726
+licenseType: Store
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 191099
+  packageName: 'Effects Pro: Simple Image Effects'
+  packageVersion: 1.0.0
+  assetPath: Assets/Effects Pro/Readme.txt
+  uploadId: 423829

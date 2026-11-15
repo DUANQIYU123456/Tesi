@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0b346d687d9a22a4f9278e480656cf53
+timeCreated: 1614758290
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 191099
+  packageName: 'Effects Pro: Simple Image Effects'
+  packageVersion: 1.0.0
+  assetPath: Assets/Effects Pro/Shaders/Sepia.shader
+  uploadId: 423829

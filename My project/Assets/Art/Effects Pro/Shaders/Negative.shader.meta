@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: ba92c7b1cb4a2ba46a2fb2ae72040e6f
+timeCreated: 1614680092
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 191099
+  packageName: 'Effects Pro: Simple Image Effects'
+  packageVersion: 1.0.0
+  assetPath: Assets/Effects Pro/Shaders/Negative.shader
+  uploadId: 423829

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 075d6a2ac131ae44f8e03d186f7c4b51
+timeCreated: 1614680092
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 191099
+  packageName: 'Effects Pro: Simple Image Effects'
+  packageVersion: 1.0.0
+  assetPath: Assets/Effects Pro/Shaders/Greyscale.shader
+  uploadId: 423829

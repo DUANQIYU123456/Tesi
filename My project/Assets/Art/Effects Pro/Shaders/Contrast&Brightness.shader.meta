@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 38db32632b8baef489c04bd975b838c1
+timeCreated: 1614680092
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 191099
+  packageName: 'Effects Pro: Simple Image Effects'
+  packageVersion: 1.0.0
+  assetPath: Assets/Effects Pro/Shaders/Contrast&Brightness.shader
+  uploadId: 423829

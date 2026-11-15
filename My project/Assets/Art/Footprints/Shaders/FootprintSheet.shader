@@ -25,6 +25,7 @@ Shader "Xiaoduan/Environment/Footprint Cutout"
    CBUFFER_START(UnityPerMaterial)
     float4 _UVRect;half4 _Tint;half _Opacity;half _Glow;
    CBUFFER_END
+   float _TownResidualBoost;
    struct A {float4 positionOS:POSITION;float3 normalOS:NORMAL;float2 uv:TEXCOORD0;};
    struct V {float4 positionCS:SV_POSITION;float3 positionWS:TEXCOORD0;half3 normalWS:TEXCOORD1;float2 uv:TEXCOORD2;half fog:TEXCOORD3;};
    V Vert(A a){V o;VertexPositionInputs p=GetVertexPositionInputs(a.positionOS.xyz);o.positionCS=p.positionCS;o.positionWS=p.positionWS;o.normalWS=TransformObjectToWorldNormal(a.normalOS);o.uv=a.uv;o.fog=ComputeFogFactor(p.positionCS.z);return o;}
@@ -41,7 +42,7 @@ Shader "Xiaoduan/Environment/Footprint Cutout"
     for(uint n=0;n<GetAdditionalLightsCount();n++){Light light=GetAdditionalLight(n,i.positionWS);lighting+=light.color*saturate(dot(normal,light.direction))*light.distanceAttenuation;}
     #endif
     half variation=lerp(.65,1,source.r);
-    return half4(MixFog(_Tint.rgb*variation*(lighting+_Glow),i.fog),coverage);
+    return half4(MixFog(_Tint.rgb*variation*(lighting+_Glow*(1+_TownResidualBoost*3.2)),i.fog),coverage);
    }
    ENDHLSL
   }
