@@ -1,0 +1,23 @@
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine.Rendering.Universal;
+using System.Linq;
+using TMPro;
+using Xiaoduan.Room3;
+if(EditorApplication.isPlaying)throw new System.Exception("Edit mode required");
+var flow=Object.FindFirstObjectByType<Room3StoryFlow>();
+foreach(var a in Object.FindObjectsByType<RocketboxWitness>(FindObjectsInactive.Include,FindObjectsSortMode.None).Where(a=>a.workStation)){
+ a.orientation=Quaternion.Euler(0,180,0);a.Preview(0);EditorUtility.SetDirty(a);
+ var light=Object.FindObjectsByType<Light>(FindObjectsInactive.Include,FindObjectsSortMode.None).First(l=>l.name=="Work light "+a.variation);
+ light.transform.position=a.transform.position+new Vector3(-1.1f,2.8f,-.85f);light.transform.rotation=Quaternion.LookRotation(a.transform.position+new Vector3(0,1.05f,-.28f)-light.transform.position);
+ light.type=LightType.Spot;light.range=6;light.spotAngle=60;light.innerSpotAngle=42;light.intensity=45;light.color=new Color(.82f,.94f,.92f);light.shadows=LightShadows.Soft;light.shadowBias=.03f;light.shadowNormalBias=.12f;EditorUtility.SetDirty(light);
+ var data=light.GetComponent<UniversalAdditionalLightData>();if(data==null)data=light.gameObject.AddComponent<UniversalAdditionalLightData>();var serial=new SerializedObject(data);serial.FindProperty("m_AdditionalLightsShadowResolutionTier").intValue=UniversalAdditionalLightData.AdditionalLightsShadowResolutionTierCustom;serial.ApplyModifiedPropertiesWithoutUndo();light.shadowCustomResolution=512;EditorUtility.SetDirty(data);EditorUtility.SetDirty(light);
+}
+var dial=Object.FindObjectsByType<Transform>(FindObjectsInactive.Include,FindObjectsSortMode.None).First(t=>t.name=="The suspended dial - decorative");var p=dial.position;p.y=34;dial.position=p;
+var helix=flow.monument.position;helix.y=10.5f;flow.monument.position=helix;
+foreach(var text in Object.FindObjectsByType<TextMeshPro>(FindObjectsInactive.Include,FindObjectsSortMode.None).Where(t=>t.name=="English console surface")){
+ var owner=text.transform.parent;var local=owner.GetComponent<ArchiveConsoleSurface>();if(local==null)local=owner.gameObject.AddComponent<ArchiveConsoleSurface>();local.label=text;local.flow=flow;EditorUtility.SetDirty(local);
+}
+AssetDatabase.SaveAssets();EditorSceneManager.MarkSceneDirty(flow.gameObject.scene);EditorSceneManager.SaveScene(flow.gameObject.scene);Room3Builder.Preview();
+return new{workers=flow.workerFigures.Length,lights=Object.FindObjectsByType<Light>(FindObjectsInactive.Include,FindObjectsSortMode.None).Where(l=>l.name.StartsWith("Work light ")).Select(l=>new{l.name,p=l.transform.position.ToString(),l.intensity}).ToArray(),dial=dial.position.ToString()};

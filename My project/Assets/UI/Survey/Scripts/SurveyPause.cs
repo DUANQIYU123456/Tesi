@@ -52,7 +52,7 @@ namespace Xiaoduan.Survey
             if(Paused){Resume();return;}
             var hud=SurveyHUD.Instance;var story=FindFirstObjectByType<Room3StoryFlow>();
             if(hud==null||hud.MenuVisible||hud.IsReading||SurveyHUD.BlocksWorld||
-               (story!=null&&(story.Reading||story.ui.DecisionVisible||story.EndingChosen))||
+               (story!=null&&(story.Reading||story.ui.DecisionVisible||story.EndingChosen||(story.embodied!=null&&story.embodied.Gripping)))||
                (SceneController.Instance!=null&&SceneController.Instance.IsTransitioning))return;
             Open();
         }
@@ -80,3 +80,4 @@ namespace Xiaoduan.Survey
         void OnDestroy(){Resume();SceneManager.sceneLoaded-=SceneLoaded;}
     }
 }
+

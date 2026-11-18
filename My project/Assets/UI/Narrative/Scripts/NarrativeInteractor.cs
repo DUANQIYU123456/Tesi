@@ -82,6 +82,7 @@ namespace Xiaoduan.Narrative
             if (selectedPortal==null && inspectables!=null) foreach (var item in inspectables)
             {
                 if (item==null || !item.CanInspect || item.gameObject.scene!=gameObject.scene) continue;
+                if(item.TryGetComponent<Xiaoduan.Survey.TownAdvertisement>(out var ad)&&!ad.CanReadFrom(eye))continue;
                 Bounds bounds=item.FocusBounds;
                 float distance=Vector3.Distance(eye,bounds.ClosestPoint(eye));
                 if (distance>item.interactionDistance) continue;
@@ -91,7 +92,7 @@ namespace Xiaoduan.Narrative
                 float score=(1-dot)*20+distance*.1f;
                 if (score<best) { best=score; selectedObject=item; }
             }
-            if (selectedPortal!=null) view.SetPrompt(gameObject.scene.name=="ROOM1" && selectedPortal.sceneName=="ROOM2" ? "FORMAT ANOMALY" : view.theme.enterLabel,view.theme.portalTitle);
+            if (selectedPortal!=null) view.SetPrompt(gameObject.scene.name=="ROOM1" && selectedPortal.sceneName=="ROOM2" ? "PROCESS / ENTER" : view.theme.enterLabel,view.theme.portalTitle);
             else if (selectedObject!=null) view.SetPrompt(view.theme.examineLabel,selectedObject.entry.title);
             else view.SetPrompt("","");
             view.SetFocus(selectedPortal!=null || selectedObject!=null);

@@ -26,7 +26,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
   - {fileID: 4416598669474158139}
-  m_RendererFeatureMap: 3b5678f916e94a3d
+  - {fileID: 1819675428600591405}
+  m_RendererFeatureMap: 3b5678f916e94a3d2db43e4829c94019
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -55,6 +56,24 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &1819675428600591405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca4f29349e8d8e41a3cd5b517d67896, type: 3}
+  m_Name: ROOM3 - Vefects archive refraction
+  m_EditorClassIdentifier: Assembly-CSharp::Vefects.Distortion.VefectsDistortionFeature
+  m_Active: 0
+  settings:
+    layerMask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    sceneView: 0
 --- !u!114 &4416598669474158139
 MonoBehaviour:
   m_ObjectHideFlags: 0

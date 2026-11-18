@@ -1,0 +1,50 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine.Rendering;
+using TMPro;
+if(EditorApplication.isPlaying)throw new Exception("Edit mode required");
+const string F="Assets/Room3/DetailPass/";
+Mesh Fracture(int variant){
+ string path=F+"Meshes/Fractured cast section "+variant+".asset";var cached=AssetDatabase.LoadAssetAtPath<Mesh>(path);
+ var polygons=new[]{
+  new[]{new Vector2(-.5f,-.5f),new Vector2(.34f,-.5f),new Vector2(.5f,-.31f),new Vector2(.5f,.5f),new Vector2(-.40f,.5f),new Vector2(-.5f,.36f)},
+  new[]{new Vector2(-.5f,-.5f),new Vector2(.5f,-.5f),new Vector2(.5f,.32f),new Vector2(.32f,.5f),new Vector2(-.5f,.5f)},
+  new[]{new Vector2(-.5f,-.30f),new Vector2(-.32f,-.5f),new Vector2(.5f,-.5f),new Vector2(.5f,.44f),new Vector2(.41f,.5f),new Vector2(-.5f,.5f)}
+ };
+ var p=polygons[variant];var vs=new List<Vector3>();var ns=new List<Vector3>();var uv=new List<Vector2>();var indices=new List<int>();
+ void Face(Vector3[] points,Vector3 expected){int k=vs.Count;Vector3 normal=Vector3.Cross(points[1]-points[0],points[2]-points[0]).normalized;bool reverse=Vector3.Dot(normal,expected)<0;if(reverse)normal=-normal;foreach(var q in points){vs.Add(q);ns.Add(normal);uv.Add(new Vector2(q.x,q.y));}for(int i=1;i<points.Length-1;i++)indices.AddRange(reverse?new[]{k,k+i+1,k+i}:new[]{k,k+i,k+i+1});}
+ Vector3 P(int i,float inset,float z)=>new Vector3(p[i].x*inset,p[i].y*inset,z);
+ Face(Enumerable.Range(0,p.Length).Select(i=>P(i,.97f,-.5f)).ToArray(),Vector3.back);Face(Enumerable.Range(0,p.Length).Select(i=>P(i,.97f,.5f)).ToArray(),Vector3.forward);
+ for(int i=0;i<p.Length;i++){int j=(i+1)%p.Length;Vector3 side=new Vector3((p[i].x+p[j].x)*.5f,(p[i].y+p[j].y)*.5f,0);Face(new[]{P(i,1,-.46f),P(j,1,-.46f),P(j,1,.46f),P(i,1,.46f)},side);Face(new[]{P(i,.97f,-.5f),P(j,.97f,-.5f),P(j,1,-.46f),P(i,1,-.46f)},side+Vector3.back);Face(new[]{P(i,1,.46f),P(j,1,.46f),P(j,.97f,.5f),P(i,.97f,.5f)},side+Vector3.forward);}
+ var mesh=new Mesh{name="Fractured cast section "+variant};mesh.SetVertices(vs);mesh.SetNormals(ns);mesh.SetUVs(0,uv);mesh.SetTriangles(indices,0);mesh.RecalculateBounds();if(cached!=null){EditorUtility.CopySerialized(mesh,cached);Object.DestroyImmediate(mesh);mesh=cached;EditorUtility.SetDirty(mesh);}else AssetDatabase.CreateAsset(mesh,path);return mesh;
+}
+var shapes=Enumerable.Range(0,3).Select(Fracture).ToArray();
+var scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene();int changed=0;var types=new Dictionary<string,int>();
+foreach(var filter in Object.FindObjectsByType<MeshFilter>(FindObjectsSortMode.None).OrderBy(m=>m.name).ThenBy(m=>m.transform.position.z)){
+ if(filter.gameObject.scene!=scene||filter.GetComponent<Collider>()!=null)continue;
+ bool target=filter.name=="Vertebral body"||filter.name.StartsWith("Rib arch")||filter.name=="Drifting concrete fragment"||filter.name=="Radial block"||filter.name=="Sheared layers"||filter.name=="Cantilever slab";
+ if(!target)continue;filter.sharedMesh=shapes[changed%3];EditorUtility.SetDirty(filter);types[filter.name]=types.TryGetValue(filter.name,out int n)?n+1:1;changed++;
+}
+Material Mat(string name,Color color,bool unlit=false){string path=F+"Materials/"+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);if(m==null){m=new Material(Shader.Find(unlit?"Universal Render Pipeline/Unlit":"Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(m,path);}m.SetColor("_BaseColor",color);if(!unlit){m.SetFloat("_Metallic",.55f);m.SetFloat("_Smoothness",.23f);}EditorUtility.SetDirty(m);return m;}
+var steel=Mat("Brushed console gunmetal",new Color(.07f,.083f,.081f));var recess=Mat("Console screen smoked glass",new Color(.004f,.008f,.007f),true);var led=Mat("Console quiet signal",new Color(.11f,.34f,.23f),true);
+var font=AssetDatabase.LoadAssetAtPath<TMP_FontAsset>("Assets/UI/Survey/Fonts/Inter/Inter SemiBold SDF.asset");
+int terminals=0;
+foreach(var node in Object.FindObjectsByType<Xiaoduan.Room3.Room3StoryNode>(FindObjectsSortMode.None)){
+ if(!node.name.StartsWith("Archive terminal"))continue;var terminal=node.transform;var display=terminal.Find("Archive display");if(display==null||display.Find("Recessed archive interface")!=null)continue;
+ var group=new GameObject("Recessed archive interface").transform;group.SetParent(display,false);group.localScale=new Vector3(1/display.localScale.x,1/display.localScale.y,1/display.localScale.z);
+ Transform Box(string name,Vector3 p,Vector3 scale,Material mat){var g=GameObject.CreatePrimitive(PrimitiveType.Cube);g.name=name;g.transform.SetParent(group,false);g.transform.localPosition=p;g.transform.localScale=scale;Object.DestroyImmediate(g.GetComponent<Collider>());g.GetComponent<Renderer>().sharedMaterial=mat;return g.transform;}
+ Box("Smoked glass inset",new Vector3(0,0,-.338f),new Vector3(1.14f,.32f,.012f),recess);
+ foreach(int side in new[]{-1,1}){Box("Machined screen side",new Vector3(side*.588f,0,-.347f),new Vector3(.025f,.36f,.025f),steel);Box("Machined screen cap",new Vector3(0,side*.177f,-.347f),new Vector3(1.20f,.024f,.025f),steel);}
+ Box("Quiet status line",new Vector3(0,-.125f,-.348f),new Vector3(1.02f,.006f,.002f),led);
+ var label=new GameObject("English console surface",typeof(TextMeshPro)).GetComponent<TextMeshPro>();label.transform.SetParent(group,false);label.transform.localPosition=new Vector3(0,.022f,-.350f);label.rectTransform.sizeDelta=new Vector2(1.01f,.25f);label.font=font;label.fontSharedMaterial=font.material;label.fontSize=.45f;label.alignment=TextAlignmentOptions.Center;label.color=new Color(.60f,.69f,.63f);label.text=node.kind==Xiaoduan.Room3.Room3StoryNode.Kind.Decision?"ARCHIVE / FINAL RECORD\n[E] MAKE A CHOICE":"ARCHIVE / RETAINED TRACE\n[E] EXAMINE RECORD";label.raycastTarget=false;
+ foreach(Transform child in terminal){if(child.GetComponent<TextMeshPro>()!=null)child.gameObject.SetActive(false);if(child.name=="Active stripe"){child.localScale=new Vector3(.8f,.012f,.012f);child.GetComponent<Renderer>().sharedMaterial=led;}}
+ // Small ventilation cuts give the plinth a manufactured face at walking distance.
+ for(int i=0;i<7;i++){var g=GameObject.CreatePrimitive(PrimitiveType.Cube);g.name="Console ventilation recess";g.transform.SetParent(terminal,false);g.transform.localPosition=new Vector3(-.30f+i*.10f,.69f,-.430f);g.transform.localScale=new Vector3(.055f,.008f,.006f);Object.DestroyImmediate(g.GetComponent<Collider>());g.GetComponent<Renderer>().sharedMaterial=recess;}
+ terminals++;
+}
+AssetDatabase.SaveAssets();EditorSceneManager.MarkSceneDirty(scene);EditorSceneManager.SaveScene(scene);Room3Builder.Preview();
+var report=new{changed,types,terminals,colliders=Object.FindObjectsByType<Collider>(FindObjectsInactive.Include,FindObjectsSortMode.None).Count(c=>c.gameObject.scene==scene)};System.IO.File.WriteAllText("D:/CODEX/2026-11-17/new-chat-2/outputs/ROOM3人物与建筑完善/architecture-install.json",Newtonsoft.Json.JsonConvert.SerializeObject(report,Newtonsoft.Json.Formatting.Indented));return report;

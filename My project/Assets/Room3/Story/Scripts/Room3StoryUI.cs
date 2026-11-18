@@ -106,14 +106,25 @@ namespace Xiaoduan.Room3
         {
             endingPanel.SetActive(true);archivePanel.SetActive(false);decisionPanel.SetActive(false);promptGroup.alpha=0;
             objectiveText.transform.parent.gameObject.SetActive(false);settingsText.gameObject.SetActive(false);calibration.SetActive(false);noticeUntil=0;noticeGroup.alpha=0;
-            endingTitle.text=preserve?"Custodisci le rovine":"Ripristina l'ordine";
-            endingBody.text=preserve?"THE ARCHIVE IS RETAINED\n\nGrace Fryer\nKatherine Schaub\nEdna Hussman\nAlbina Larice\nQuinta McDonald\n\nAlso remembering Amelia \"Mollie\" Maggia and the other dial painters.":"SECTOR RESET\n\nAnomalous records erased.\nAccess to the sector has been closed.\n\n\"No history remains in the index.\"\n\nA fictional system message. Erasure cannot undo what happened.";
+            endingTitle.text=preserve?"PRESERVE THE RUINS":"RESTORE ORDER";
+            endingBody.text=preserve?"THE ARCHIVE IS RETAINED\n\nThe evidence remains accessible.\nThe ruins remain as a witness.\n\nYour choice preserves this record;\nit cannot repair the harm.":"SECTOR RESET\n\nThe local index has been erased.\nAccess to the sector has been closed.\n\nA fictional system message.\nErasure cannot undo what happened.";
             endingCredits.text=preserve?"Historical references: National Archives, Radium Dial Painters records; Library of Congress.\nPortraits: Mollie Maggia and Grace Fryer, from the thesis research collection.\nThe green light and suspended monument are artistic interpretations.":"This ending changes the current playthrough only.\nRestarting restores the town and its portal.";
-            portraitMollie.gameObject.SetActive(preserve);portraitGrace.gameObject.SetActive(preserve);
+            portraitMollie.gameObject.SetActive(false);portraitGrace.gameObject.SetActive(false);
             portraitMollie.texture=mollieImage;portraitGrace.texture=graceImage;
             Fit(portraitMollie,205,270);Fit(portraitGrace,205,270);
-            endingPanel.transform.Find("Portrait name left").gameObject.SetActive(preserve);
-            endingPanel.transform.Find("Portrait name right").gameObject.SetActive(preserve);
+            endingPanel.transform.Find("Portrait name left").gameObject.SetActive(false);
+            endingPanel.transform.Find("Portrait name right").gameObject.SetActive(false);
+        }
+        public const float ResultHoldSeconds=6;
+        public void ShowMemorial()
+        {
+            endingTitle.text="IN MEMORY";
+            endingPanel.GetComponent<UnityEngine.UI.Image>().color=Color.black;SetFade(1,Color.black);
+            endingBody.text="Grace Fryer\n\nKatherine Schaub\n\nEdna Hussman\n\nAlbina Larice\n\nQuinta McDonald\n\n\nAlso remembering\nAmelia ‘Mollie’ Maggia\nand the other dial painters.";
+            endingCredits.text="Historical references: National Archives, Radium Dial Painters records; Library of Congress.\nPortraits: Mollie Maggia and Grace Fryer, from the thesis research collection.\nSuspended figures are symbolic, not historical portraits.";
+            portraitMollie.gameObject.SetActive(true);portraitGrace.gameObject.SetActive(true);
+            endingPanel.transform.Find("Portrait name left").gameObject.SetActive(true);
+            endingPanel.transform.Find("Portrait name right").gameObject.SetActive(true);
         }
         static void Fit(UnityEngine.UI.RawImage picture,float width,float height)
         {

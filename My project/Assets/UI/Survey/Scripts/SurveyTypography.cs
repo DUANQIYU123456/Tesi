@@ -26,10 +26,12 @@ namespace Xiaoduan.Survey
         {
             var hud=SurveyHUD.Instance;if(hud==null||bodyFont==null)return;
             story=FindFirstObjectByType<Room3StoryUI>();
+            var milestones=GetComponent<SurveyMilestones>();
             foreach(var text in FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include,FindObjectsSortMode.None))
             {
+                if(milestones!=null && text.transform.IsChildOf(milestones.plate))continue;
                 if(!sizes.ContainsKey(text))sizes[text]=text.fontSize;
-                bool display=displayFont!=null&&(text.name=="Project title"||text.name=="Pause title"||(story!=null&&text==story.endingTitle));
+                bool display=displayFont!=null&&text.name=="Project title";
                 var font=text==hud.cpm||text==hud.traceCount||text==hud.integrity||text==hud.reducedText||System.Array.IndexOf(hud.fragments,text)>=0||text.name.StartsWith("Index ")?instrumentFont:
                     text==hud.roomLabel||sizes[text]>=30||text.name.Contains("title")||text.name.Contains("Title")||text.GetComponentInParent<UnityEngine.UI.Button>()!=null?titleFont:bodyFont;
                 if(display)font=displayFont;
@@ -39,7 +41,7 @@ namespace Xiaoduan.Survey
                 if(display)
                 {
                     text.fontStyle=FontStyles.Normal;text.characterSpacing=0;
-                    baseline=text.name=="Project title"?100:text.name=="Pause title"?52:56;
+                    baseline=112;
                 }
                 if(text==hud.truthText)baseline=26;
                 if(text==hud.sourceText)baseline=18;
@@ -72,8 +74,10 @@ namespace Xiaoduan.Survey
         {
             if(hud==null)return;
             var panel=(RectTransform)hud.archiveTitle.transform.parent;panel.sizeDelta=new Vector2(1240,850);
+            if(hud.IsClinicalReading){hud.GetComponent<Xiaoduan.Clinical.ClinicalDeskReader>()?.Layout();return;}
             hud.archiveTitle.rectTransform.anchoredPosition=new Vector2(0,367);hud.archiveTitle.rectTransform.sizeDelta=new Vector2(1120,58);
             var rule=panel.Find("Header rule") as RectTransform;if(rule!=null){rule.anchoredPosition=new Vector2(0,320);rule.sizeDelta=new Vector2(1120,2);}
+            if(hud.IsAdvertisementReading){LayoutAdvertisement(hud,panel);return;}
             hud.officialText.rectTransform.sizeDelta=new Vector2(730,190);
             ((RectTransform)hud.officialLayer.transform).anchoredPosition=new Vector2(-175,200);
             var truth=(RectTransform)hud.truthLayer.transform;
@@ -81,12 +85,41 @@ namespace Xiaoduan.Survey
             truth.anchoredPosition=new Vector2(-175,concealed?-40:80);truth.sizeDelta=new Vector2(730,concealed?258:385);
             hud.truthText.rectTransform.sizeDelta=truth.sizeDelta;
             hud.scratch.rectTransform.sizeDelta=truth.sizeDelta;
-            hud.archivePicture.rectTransform.anchoredPosition=new Vector2(435,80);
-            var photoLabel=panel.Find("Photograph label") as RectTransform;if(photoLabel!=null)photoLabel.anchoredPosition=new Vector2(435,-110);
+            hud.archivePicture.rectTransform.anchoredPosition=new Vector2(395,80);
+            FitArchivePicture(hud,new Vector2(300,330));
+            var photoLabel=panel.Find("Photograph label") as RectTransform;if(photoLabel!=null){photoLabel.anchoredPosition=new Vector2(395,-110);photoLabel.sizeDelta=new Vector2(300,30);}
             hud.revealLabel.rectTransform.anchoredPosition=new Vector2(-175,-240);hud.revealLabel.rectTransform.sizeDelta=new Vector2(730,35);
             hud.sourceText.rectTransform.anchoredPosition=new Vector2(0,-308);hud.sourceText.rectTransform.sizeDelta=new Vector2(1120,83);
             hud.archiveHint.rectTransform.anchoredPosition=new Vector2(-75,-378);hud.archiveHint.rectTransform.sizeDelta=new Vector2(970,35);hud.archiveHint.fontSize=18;
             hud.closeButton.GetComponent<RectTransform>().anchoredPosition=new Vector2(532,-377);
+        }
+        void LayoutAdvertisement(SurveyHUD hud,RectTransform panel)
+        {
+            panel.sizeDelta=new Vector2(1400,900);
+            hud.archiveTitle.rectTransform.anchoredPosition=new Vector2(0,392);
+            hud.archiveTitle.rectTransform.sizeDelta=new Vector2(1280,58);
+            var rule=panel.Find("Header rule") as RectTransform;
+            if(rule!=null){rule.anchoredPosition=new Vector2(0,341);rule.sizeDelta=new Vector2(1280,2);}
+            var truth=(RectTransform)hud.truthLayer.transform;
+            truth.anchoredPosition=new Vector2(-325,22);truth.sizeDelta=new Vector2(600,500);
+            hud.truthText.rectTransform.anchoredPosition=Vector2.zero;hud.truthText.rectTransform.sizeDelta=truth.sizeDelta;
+            hud.truthText.alignment=TextAlignmentOptions.TopLeft;
+            FitArchivePicture(hud,new Vector2(480,500));
+            float pictureHeight=hud.archivePicture.rectTransform.sizeDelta.y;
+            hud.archivePicture.rectTransform.anchoredPosition=new Vector2(370,278-pictureHeight*.5f);
+            var photoLabel=panel.Find("Photograph label") as RectTransform;
+            if(photoLabel!=null){photoLabel.anchoredPosition=new Vector2(370,250-pictureHeight);photoLabel.sizeDelta=new Vector2(480,32);}
+            hud.revealLabel.rectTransform.anchoredPosition=new Vector2(0,309);hud.revealLabel.rectTransform.sizeDelta=new Vector2(1280,30);
+            hud.sourceText.rectTransform.anchoredPosition=new Vector2(0,-315);hud.sourceText.rectTransform.sizeDelta=new Vector2(1280,92);
+            hud.sourceText.fontSize=LargeText?23:20;
+            hud.archiveHint.rectTransform.anchoredPosition=new Vector2(-82,-403);hud.archiveHint.rectTransform.sizeDelta=new Vector2(1100,35);hud.archiveHint.fontSize=18;
+            hud.closeButton.GetComponent<RectTransform>().anchoredPosition=new Vector2(585,-403);
+        }
+        static void FitArchivePicture(SurveyHUD hud,Vector2 box)
+        {
+            var image=hud.archivePicture;if(image.texture==null)return;
+            float ratio=(float)image.texture.width/image.texture.height;
+            image.rectTransform.sizeDelta=ratio>box.x/box.y?new Vector2(box.x,box.x/ratio):new Vector2(box.y*ratio,box.y);
         }
     }
 }

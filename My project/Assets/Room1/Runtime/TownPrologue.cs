@@ -67,7 +67,9 @@ namespace Xiaoduan.Survey
    SurveyVignette=Instantiate(prefab,root,false);SurveyVignette.name="ROOM1 / Q Vignette / isotope green";
    SurveyVignette.transform.SetAsFirstSibling();
    var frame=(RectTransform)SurveyVignette.transform;frame.anchorMin=Vector2.zero;frame.anchorMax=Vector2.one;frame.offsetMin=-((RectTransform)root).offsetMin;frame.offsetMax=-((RectTransform)root).offsetMax;
+   SurveyVignette.mainScale=.95f;SurveyVignette.mainColor=new Color(.06f,1,.20f,.46f);
    SurveyVignette.CheckReferences();
+   SurveyVignette.UpdateVignette();
    foreach(var corner in SurveyVignette.cornerImages)corner.raycastTarget=false;
    visorParts.Add(SurveyVignette.gameObject);
   }
@@ -82,7 +84,7 @@ namespace Xiaoduan.Survey
    var hud=SurveyHUD.Instance;hud.Notify("ISOTOPE TRACE RETAINED / ANOMALY MATERIALIZING",3);if(withSound)hud.effects.PlayOneShot(hud.boot,.3f);
    for(float t=0;t<1.8f;t+=Time.deltaTime){float s=Mathf.SmoothStep(.025f,1,t/1.8f);rift.transform.localScale=Vector3.one*s;riftLight.intensity=s*.8f;yield return null;}
    rift.transform.localScale=Vector3.one;PortalVisible=true;Revealing=false;foreach(var c in portalColliders)if(c is BoxCollider){c.isTrigger=true;c.enabled=true;}
-   portal.enabled=true;hud.Notify("ANOMALY DETECTED / [E] FORMAT ANOMALY",4);
+   portal.enabled=true;hud.Notify("ANOMALY STABLE / [E] PROCESS AND ENTER",4);
   }
   void BeginCamera(ScriptableRenderContext context,Camera camera)
   {

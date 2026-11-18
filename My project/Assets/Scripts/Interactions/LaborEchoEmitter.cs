@@ -17,6 +17,7 @@ public sealed class LaborEchoEmitter : MonoBehaviour
     float nextOcclusionCheck;
     float occlusionGain = 1f;
     bool occluded;
+    public float SignalStrength { get; private set; }
     readonly RaycastHit[] hits = new RaycastHit[16];
 
     void Awake()
@@ -65,7 +66,11 @@ public sealed class LaborEchoEmitter : MonoBehaviour
             }
             occlusionGain = occluded ? 0.65f : 1f;
         }
-        float target = close && !scan ? baseVolume * occlusionGain : 0f;
+        SignalStrength = close ? Mathf.Clamp01(1f-Vector3.Distance(listener,transform.position)/audibleDistance)*occlusionGain : 0f;
+        // Keep the labor audible beneath the scan rather than muting it for most of the cycle.
+        float target = close ? baseVolume * occlusionGain * (scan ? .42f : 1f) : 0f;
+        var hud = Xiaoduan.Survey.SurveyHUD.Instance;
+        if(hud!=null&&hud.SoundFocusActive&&hud.FocusedSoundEmitter==this)target=baseVolume*occlusionGain;
         if (target > 0f && !source.isPlaying)
         {
             // Reapproaching samples the continuing rhythm instead of restarting at its first beat.

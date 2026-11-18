@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 
 public class SceneController : Singleton<SceneController>
@@ -59,6 +60,12 @@ public class SceneController : Singleton<SceneController>
     {
         IsTransitioning = true;
         var sourceScene = oldPlayer.scene;
+        // A destination player can enable while the outgoing player still owns the
+        // devices. Remember the active scheme and transfer it after disabling that rig.
+        var sourceInput = oldPlayer.GetComponent<PlayerInput>();
+        string sourceScheme = sourceInput != null ? sourceInput.currentControlScheme : null;
+        var sourceDevices = new InputDevice[sourceInput != null ? sourceInput.devices.Count : 0];
+        for (int i = 0; i < sourceDevices.Length; i++) sourceDevices[i] = sourceInput.devices[i];
         var rigRoots = new HashSet<GameObject> { oldPlayer.transform.root.gameObject };
         // ROOM1 uses the Starter Assets first-person camera rig.
         var mainCamera = Camera.main;
@@ -102,6 +109,7 @@ public class SceneController : Singleton<SceneController>
                 targetPlayer = oldPlayer;
             }
 
+            if (targetPlayer != oldPlayer) TransferGameplayInput(targetPlayer, sourceScheme, sourceDevices);
             PlacePlayer(targetPlayer, scene, tag);
             arrivedPlayer = targetPlayer;
             // Keep the carried gameplay camera when the room has no player rig.
@@ -148,6 +156,24 @@ public class SceneController : Singleton<SceneController>
                 + " | position=" + arrivedCamera.transform.position.ToString("F2")
                 + " | enabled=" + arrivedCamera.isActiveAndEnabled, arrivedCamera);
         IsTransitioning = false;
+    }
+
+    private static void TransferGameplayInput(GameObject player, string scheme, InputDevice[] devices)
+    {
+        var input = player.GetComponent<PlayerInput>();
+        if (input == null || input.actions == null || !input.isActiveAndEnabled) return;
+
+        bool sourceAvailable = devices.Length > 0 && !string.IsNullOrEmpty(scheme)
+            && input.actions.FindControlSchemeIndex(scheme) >= 0;
+        foreach (var device in devices)
+            if (device == null || !device.added) sourceAvailable = false;
+        if (sourceAvailable)
+            input.SwitchCurrentControlScheme(scheme, devices);
+        else if (input.devices.Count == 0 && Keyboard.current != null && Mouse.current != null
+            && input.actions.FindControlSchemeIndex("KeyboardMouse") >= 0)
+            input.SwitchCurrentControlScheme("KeyboardMouse", Keyboard.current, Mouse.current);
+
+        Debug.Log("Portal controls: " + input.currentControlScheme + " | devices=" + input.devices.Count, input);
     }
 
     private static void ConfigureGameplayCamera(Camera gameplayCamera, Scene scene)

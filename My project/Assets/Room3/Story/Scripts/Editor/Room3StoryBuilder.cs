@@ -170,7 +170,7 @@ public static class Room3StoryBuilder
         }
         flow.boneLights=glow.ToArray();
         Box("Testimony backlight",P(0,9.5f,45),P(11,6,.15f),white,zone);
-        Text("PRESTARE GIURAMENTO",P(0,6.8f,41.5f),.38f,zone);
+        Text("BEAR WITNESS",P(0,6.8f,41.5f),.38f,zone);
         var terminal=oldRoot.Find("04 - The dial and archive core/Archive terminal - 03-02");terminal.SetParent(zone,true);terminal.position=P(-3,0,33);
         terminal.GetComponent<NarrativeInspectable>().enabled=false;var n=terminal.gameObject.AddComponent<Room3StoryNode>();n.kind=Room3StoryNode.Kind.CourtRecord;n.label="IX / Five women doomed to die";n.focus=terminal.Find("Archive display");
     }
@@ -261,7 +261,7 @@ public static class Room3StoryBuilder
         var whiteText=Label("Official layer","",archive.transform,new Vector2(660,450),new Vector2(-170,-5),25);ui.whiteText=whiteText;ui.whiteRecord=whiteText.gameObject.AddComponent<CanvasGroup>();
         var greenText=Label("Revealed layer","",archive.transform,new Vector2(660,450),new Vector2(-170,-5),24);greenText.color=new Color(.62f,.94f,.66f);greenText.enableAutoSizing=true;greenText.fontSizeMin=21;greenText.fontSizeMax=24;ui.greenText=greenText;ui.greenRecord=greenText.gameObject.AddComponent<CanvasGroup>();
         ui.archivePicture=Picture("Historical image",archive.transform,new Vector2(275,350),new Vector2(365,20));
-        ui.clinicalButton=Button("Clinical image button","Show / hide clinical image",archive.transform,new Vector2(290,42),new Vector2(365,-180));
+        ui.clinicalButton=Button("Clinical image button","CLINICAL IMAGE",archive.transform,new Vector2(290,42),new Vector2(365,-180));
         ui.archiveSource=Label("Source and reconstruction note","",archive.transform,new Vector2(1040,78),new Vector2(0,-270),16);
         ui.revealLabel=Label("Reveal status","",archive.transform,new Vector2(640,30),new Vector2(-200,-342),19);
         ui.closeButton=Button("Close archive","CLOSE  [E / ESC]",archive.transform,new Vector2(280,43),new Vector2(375,-338));
@@ -269,8 +269,8 @@ public static class Room3StoryBuilder
         var decision=Panel("Core decision",canvas.transform,new Vector2(1100,610),Vector2.zero,new Color(.015f,.027f,.02f,.99f));ui.decisionPanel=decision.gameObject;
         Label("Decision title","THE RECORD IS NOW IN YOUR CUSTODY",decision.transform,new Vector2(1000,60),new Vector2(0,225),34,TextAlignmentOptions.Center);
         Label("Decision explanation","Choose what this system retains.\nBoth actions end the current survey.",decision.transform,new Vector2(950,100),new Vector2(0,110),26,TextAlignmentOptions.Center);
-        ui.formatButton=Button("Format","RESTORE ORDER\nRIPRISTINA L'ORDINE",decision.transform,new Vector2(455,90),new Vector2(-250,-30));
-        ui.preserveButton=Button("Preserve","GUARD THE RUINS\nCUSTODISCI LE ROVINE",decision.transform,new Vector2(455,90),new Vector2(250,-30));
+        ui.formatButton=Button("Format","ERASE",decision.transform,new Vector2(455,90),new Vector2(-250,-30));
+        ui.preserveButton=Button("Preserve","PRESERVE",decision.transform,new Vector2(455,90),new Vector2(250,-30));
         Label("Format consequence","Erase the local archive.\nReturn to the town; close the portal.",decision.transform,new Vector2(450,100),new Vector2(-250,-145),21,TextAlignmentOptions.Center);
         Label("Preserve consequence","Keep the records.\nStabilize the ruins as a memorial.",decision.transform,new Vector2(450,100),new Vector2(250,-145),21,TextAlignmentOptions.Center);
         ui.fade=Panel("Transition veil",canvas.transform,new Vector2(6000,6000),Vector2.zero,new Color(0,0,0,0));

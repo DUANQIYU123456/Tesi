@@ -1,0 +1,31 @@
+using UnityEngine;
+using UnityEditor;
+using System.Linq;
+var root=GameObject.Find("ROOM3 - Rocketbox suspended testimony").transform;
+var red=AssetDatabase.LoadAssetAtPath<Material>("Assets/Room3/Rocketbox/Materials/Muted red ceiling slit.mat");
+red.shader=Shader.Find("Xiaoduan/Room3/Archive ceiling");red.SetColor("_BaseColor",new Color(.8f,.007f,.004f));EditorUtility.SetDirty(red);
+var canopy=root.Find("Recessed crimson ceiling");
+if(canopy==null){var g=GameObject.CreatePrimitive(PrimitiveType.Cube);g.name="Recessed crimson ceiling";canopy=g.transform;canopy.SetParent(root,false);Object.DestroyImmediate(g.GetComponent<Collider>());g.GetComponent<Renderer>().sharedMaterial=red;}
+canopy.localPosition=new Vector3(0,8.55f,43);canopy.localScale=new Vector3(10.4f,.025f,9.2f);
+var steel=AssetDatabase.LoadAssetAtPath<Material>("Assets/Room3/Rocketbox/Materials/Blackened steel ribs.mat");
+for(int j=0;j<9;j++)
+{var t=root.Find("Ceiling shadow baffle "+j);if(t==null){var g=GameObject.CreatePrimitive(PrimitiveType.Cube);g.name="Ceiling shadow baffle "+j;t=g.transform;t.SetParent(root,false);Object.DestroyImmediate(g.GetComponent<Collider>());g.GetComponent<Renderer>().sharedMaterial=steel;}t.localPosition=new Vector3(0,8.48f,38.6f+j*1.1f);t.localScale=new Vector3(10.5f,.13f,.1f);}
+for(int i=0;i<6;i++)
+{var a=root.Find("Suspended memory "+(i+1)).GetComponent<Xiaoduan.Room3.RocketboxWitness>();a.anchor=new Vector3(a.anchor.x,new[]{3.2f,4.1f,5.2f,3.7f,4.6f,5.8f}[i],a.anchor.z);a.Preview(0);}
+foreach(var l in root.GetComponentsInChildren<Light>())
+{
+ if(l.name.StartsWith("Crimson upper rim")){int side=l.transform.position.x<0?-1:1;l.transform.position=new Vector3(side*4,7.9f,35);l.transform.rotation=Quaternion.LookRotation(new Vector3(side*4.8f,4.7f,44)-l.transform.position);l.intensity=85;l.spotAngle=65;l.range=17;}
+ if(l.name=="Cold portrait key"){l.intensity=105;l.color=new Color(.79f,.81f,.76f);}
+}
+var blue=AssetDatabase.LoadAssetAtPath<Material>("Assets/Room3/Rocketbox/Materials/Female_Adult_02_f002_body.mat");blue.SetColor("_BaseColor",new Color(.26f,.29f,.275f));EditorUtility.SetDirty(blue);
+var atmosphere=root.GetComponent<Xiaoduan.Room3.RocketboxAtmosphere>();if(atmosphere==null)atmosphere=root.gameObject.AddComponent<Xiaoduan.Room3.RocketboxAtmosphere>();atmosphere.flow=Object.FindFirstObjectByType<Xiaoduan.Room3.Room3StoryFlow>();atmosphere.ceiling=root.GetComponentsInChildren<Renderer>().Where(r=>r.sharedMaterial==red).ToArray();
+var tracePath="Assets/Room3/Rocketbox/Materials/Retained isotope filament.mat";var trace=AssetDatabase.LoadAssetAtPath<Material>(tracePath);if(trace==null){trace=new Material(Shader.Find("Universal Render Pipeline/Unlit"));AssetDatabase.CreateAsset(trace,tracePath);}trace.SetColor("_BaseColor",new Color(.08f,1.5f,.34f));EditorUtility.SetDirty(trace);
+foreach(var glow in atmosphere.flow.boneLights)
+for(int branch=0;branch<5;branch++)
+{
+ var n="Fine isotope vein "+branch;var t=glow.transform.Find(n);if(t!=null)continue;var g=new GameObject(n);g.transform.SetParent(glow.transform,false);var line=g.AddComponent<LineRenderer>();line.useWorldSpace=false;line.sharedMaterial=trace;line.positionCount=5;line.startWidth=.0028f;line.endWidth=.0006f;line.numCornerVertices=3;line.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
+ for(int k=0;k<5;k++){float u=k/4f,angle=branch*2.39996f;line.SetPosition(k,new Vector3(Mathf.Cos(angle)*u*.05f,Mathf.Sin(angle)*u*.07f,.018f+.003f*Mathf.Sin(k+branch)));}
+}
+foreach(var glow in atmosphere.flow.boneLights)foreach(var line in glow.GetComponentsInChildren<LineRenderer>(true))line.enabled=false;
+if(!EditorApplication.isPlaying){AssetDatabase.SaveAssets();UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(root.gameObject.scene);UnityEditor.SceneManagement.EditorSceneManager.SaveScene(root.gameObject.scene);}
+return new {ceiling=canopy.position.ToString(),suspended=root.GetComponentsInChildren<Xiaoduan.Room3.RocketboxWitness>().Count(a=>a.variation>4)};

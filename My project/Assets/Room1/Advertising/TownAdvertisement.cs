@@ -5,7 +5,7 @@ namespace Xiaoduan.Survey
 {
  public sealed class TownAdvertisement:MonoBehaviour
  {
-  public const string Copy="Feeling tired? Pop a bottle! Got diseases? Radithor’s got your back! Imagine the hype: people wandering around as they’d just won the lottery, clutching their Radithor bottles, convinced they were about to unlock the secrets of eternal vitality.";
+  public const string Copy="THE BOTTLED PROMISE\n\nRadium enters the language of everyday wellbeing: a bottle, a printed assurance, a promise of vitality.\n\nThe advertisement presents exposure as a benefit. The workplace, the body and the cost of that promise remain outside its frame.\n\nWhat does a promise of health leave out?";
   public Texture advertisement;
   public Renderer[] posters;
   public Material[] dissolveMaterials;
@@ -14,13 +14,27 @@ namespace Xiaoduan.Survey
   public bool Dissolved{get;private set;}
   public float DissolveProgress{get;private set;}
   MaterialPropertyBlock block;
+  bool queued;
+  // The noticeboard's readable face opens onto the town (+Z in ROOM1).
+  public bool CanReadFrom(Vector3 eye)
+  {
+   Vector3 center=Vector3.zero;int count=0;
+   foreach(var poster in posters)if(poster!=null){center+=poster.bounds.center;count++;}
+   return count>0&&Vector3.Dot(eye-center/count,Vector3.forward)>.08f;
+  }
   void Awake(){block=new MaterialPropertyBlock();
    #if UNITY_EDITOR
    // Warm only this imported effect, avoiding Unity's cyan async-compilation placeholder on first use.
    foreach(var material in dissolveMaterials)if(material!=null)UnityEditor.ShaderUtil.CompilePass(material,0,true);
    #endif
   }
-  public void ReaderClosed(){if(Dissolving||Dissolved)return;GetComponent<TownBlackout>()?.Begin();StartCoroutine(Dissolve());}
+  public void ReaderClosed(){if(Dissolving||Dissolved||queued)return;queued=true;GetComponent<NarrativeInspectable>().enabled=false;StartCoroutine(CloseSequence());}
+  IEnumerator CloseSequence()
+  {
+   SurveyHUD.Instance?.Notify("COMMERCIAL CLAIM INDEXED / SIGNAL UNSTABLE",1);
+   yield return new WaitForSeconds(.45f);
+   GetComponent<TownBlackout>()?.Begin();yield return Dissolve();
+  }
   IEnumerator Dissolve()
   {
    Dissolving=true;GetComponent<NarrativeInspectable>().enabled=false;

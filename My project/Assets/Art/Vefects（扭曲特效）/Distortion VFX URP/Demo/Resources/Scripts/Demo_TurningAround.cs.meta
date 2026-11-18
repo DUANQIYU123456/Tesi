@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 5e7ec37ef90cbb44293623d6caf35500
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 401072
+  packageName: Distortion VFX - URP
+  packageVersion: 1.0.2026.069
+  assetPath: Assets/Vefects/Distortion VFX URP/Demo/Resources/Scripts/Demo_TurningAround.cs
+  uploadId: 1034810

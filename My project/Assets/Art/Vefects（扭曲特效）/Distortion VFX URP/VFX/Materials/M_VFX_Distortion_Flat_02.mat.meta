@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9865e84d279c3bd4984e701468f14d15
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 401072
+  packageName: Distortion VFX - URP
+  packageVersion: 1.0.2026.069
+  assetPath: Assets/Vefects/Distortion VFX URP/VFX/Materials/M_VFX_Distortion_Flat_02.mat
+  uploadId: 1034810

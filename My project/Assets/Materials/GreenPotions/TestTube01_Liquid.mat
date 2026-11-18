@@ -25,7 +25,7 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _EmissionStrength: 0.08
+    - _EmissionStrength: 1.1
     - _Size: 0.75328314
     - _Stencil: 0
     - _WaterLine: 0.6226415

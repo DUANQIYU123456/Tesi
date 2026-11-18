@@ -33,10 +33,13 @@ namespace Xiaoduan.Room3
         public Volume volume;
         public AudioSource clockSource,clickSource,geigerSource,heartbeatSource,effectsSource;
         public AudioClip bridgeSound,oathSound,revealSound;
+        public Room3EmbodiedExpansion embodied;
+        public Room3Soundscape soundscape;
         public bool WorkerView {get;private set;}
         public bool MedicalDecoded {get;private set;}
         public bool CourtDecoded {get;private set;}
         public bool BridgeLocked {get;private set;}
+        public bool BridgeReady=>BridgeLocked&&bridgeAnimation>=1;
         public bool OathOpened {get;private set;}
         public bool EndingChosen {get;private set;}
         public bool Reading {get;private set;}
@@ -118,6 +121,7 @@ namespace Xiaoduan.Room3
             cameraInterference.strength=shock;
             cameraInterference.downwardDegrees=0;
             UpdateSound();
+            if(embodied!=null&&embodied.Gripping)return;
             if(Reading)
             {
                 bool reveal=Keyboard.current!=null&&(Keyboard.current.fKey.isPressed||Keyboard.current.spaceKey.isPressed);
@@ -133,7 +137,7 @@ namespace Xiaoduan.Room3
             TickBridgeAnimation(Time.deltaTime);
             TickGateAnimation(Time.deltaTime);
             if(!BridgeLocked&&Vector3.Distance(player.position,calibrationPoint.position)<2.8f)
-                TickCalibration(vision,eye.transform.forward,Time.deltaTime);
+                TickCalibration(true,eye.transform.forward,Time.deltaTime);
             else if(!BridgeLocked)CalibrationProgress=Mathf.MoveTowards(CalibrationProgress,0,Time.deltaTime*.6f);
             if(!OathOpened&&Vector3.Distance(player.position,oathPoint.position)<4.2f)
             {
@@ -166,9 +170,9 @@ namespace Xiaoduan.Room3
             {
                 if(target!=null){action="[E]  "+(target.kind==Room3StoryNode.Kind.Decision?"Open core console":"Examine archive");title=target.label;}
                 else if(!BridgeLocked&&Vector3.Distance(player.position,calibrationPoint.position)<2.8f)
-                {action=MedicalDecoded?"HOLD RMB  /  ALIGN THE TWO RINGS":"READ THE ARCHIVE BEFORE CALIBRATING";title="Stand on the marker and look at the suspended target";progress=CalibrationProgress;}
+                {action=MedicalDecoded?"ALIGN THE TWO RINGS / KEEP YOUR GAZE STEADY":"READ THE ARCHIVE BEFORE CALIBRATING";title="Stand on the marker. The bridge responds to your line of sight.";progress=CalibrationProgress;}
                 else if(!OathOpened&&Vector3.Distance(player.position,oathPoint.position)<4.2f)
-                {action=CourtDecoded?"HOLD LMB + PUSH UP   /   OR HOLD E":"READ THE COURT RECORD";title="Prestare giuramento  /  symbolic testimony";progress=OathProgress;}
+                {action=CourtDecoded?"HOLD LMB + PUSH UP   /   OR HOLD E":"READ THE COURT RECORD";title="BEAR WITNESS  /  symbolic testimony";progress=OathProgress;}
             }
             ui.SetPrompt(action,title,progress);
             bool calibration=!Reading&&!BridgeLocked&&MedicalDecoded&&Vector3.Distance(player.position,calibrationPoint.position)<2.8f;
@@ -176,17 +180,20 @@ namespace Xiaoduan.Room3
         }
         void UpdateObjective()
         {
-            if(recursiveArchive!=null&&recursiveArchive.Inside)objective=recursiveArchive.Objective;
+            if(embodied!=null&&!embodied.DoorOpened)objective="Sector sealed. Approach the red valve and force the pressure lock.";
+            else if(recursiveArchive!=null&&recursiveArchive.Inside)objective=recursiveArchive.Objective;
             else if(!WorkerView)objective="Cross the breach in the observation glass.";
             else if(!MedicalDecoded)objective="Examine the disputed medical record. Hold F to reveal its other layer.";
             else if(recursiveArchive!=null&&!recursiveArchive.RecordDecoded)objective="Continue into the repeated archive threshold.";
             else if(!BridgeLocked)objective="Stand on the calibration mark. Align the suspended bridge.";
-            else if(!CourtDecoded)objective="Cross the bridge and read the court archive.";
+            else if(!BridgeReady)objective="Alignment accepted. Wait for the bridge modules to lock.";
+            else if(!CourtDecoded)objective="Bridge stable. Cross and read the court archive.";
             else if(!OathOpened)objective="Approach the five figures. Hold E, or hold LMB and push upward.";
             else objective="Pass through the testimony gate. Decide what the archive should retain.";
         }
         void UpdateSound()
         {
+            if(soundscape!=null)return;
             float mix=WorkerView?1:0;
             clockSource.volume=Mathf.MoveTowards(clockSource.volume,WorkerView? .045f:.09f,Time.deltaTime*.15f);
             clickSource.volume=Mathf.MoveTowards(clickSource.volume,mix*.11f,Time.deltaTime*.2f);
@@ -261,14 +268,16 @@ namespace Xiaoduan.Room3
             if(held&&near&&alignment>.995f)CalibrationProgress=Mathf.Min(1,CalibrationProgress+delta/1.15f);
             else CalibrationProgress=Mathf.MoveTowards(CalibrationProgress,0,delta*.65f);
             if(CalibrationProgress>=1)
-            {BridgeLocked=true;effectsSource.PlayOneShot(bridgeSound,.45f);ui.Notice("ALIGNMENT ACCEPTED / BRIDGE LOCKING",3);}
+            {BridgeLocked=true;if(soundscape==null)effectsSource.PlayOneShot(bridgeSound,.45f);embodied?.BridgeImpact(-1);ui.Notice("ALIGNMENT ACCEPTED / BRIDGE LOCKING",3);}
         }
         void TickBridgeAnimation(float delta)
         {
             if(!BridgeLocked||bridgeAnimation>=1)return;
-            bridgeAnimation=Mathf.Min(1,bridgeAnimation+delta/2.5f);float t=Mathf.SmoothStep(0,1,bridgeAnimation);
+            float before=bridgeAnimation;bridgeAnimation=Mathf.Min(1,bridgeAnimation+delta/1.65f);
             for(int i=0;i<bridgeModules.Length;i++)
-            {bridgeModules[i].localPosition=Vector3.Lerp(moduleOrigins[i],lockedBridgePositions[i],t);bridgeModules[i].localRotation=Quaternion.Slerp(moduleRotations[i],Quaternion.identity,t);}
+            {float t=Mathf.Clamp01((bridgeAnimation-i*.19f)/.55f);t=1-Mathf.Pow(1-t,3);
+                bridgeModules[i].localPosition=Vector3.Lerp(moduleOrigins[i],lockedBridgePositions[i],t);bridgeModules[i].localRotation=Quaternion.Slerp(moduleRotations[i],Quaternion.identity,t);
+                if(before<i*.19f+.55f&&bridgeAnimation>=i*.19f+.55f)embodied?.BridgeImpact(i);}
             if(bridgeAnimation>=1){foreach(var c in bridgeColliders)c.enabled=true;bridgeBarrier.enabled=false;}
         }
         public void TickOath(bool held,bool upward,float delta)
@@ -277,11 +286,11 @@ namespace Xiaoduan.Room3
             if(Vector3.Distance(player.position,oathPoint.position)>4.2f)return;
             if(held&&upward)OathProgress=Mathf.Min(1,OathProgress+delta/4);
             else OathProgress=Mathf.MoveTowards(OathProgress,0,delta*.04f);
-            if(held)ui.Notice(OathProgress<.5f?"HEARING ADJOURNED / ACCESS WITHHELD":"TESTIMONY RETAINED / REQUEST PENDING",.15f);
             if(OathProgress>=1)
             {
                 OathOpened=true;foreach(var g in boneLights)g.SetActive(true);
-                effectsSource.PlayOneShot(oathSound,.5f);shock=ReducedMotion?0:.45f;ui.Notice("TESTIMONY RECEIVED",3);
+                if(soundscape==null)effectsSource.PlayOneShot(oathSound,.5f);shock=ReducedMotion?0:.45f;ui.Notice("TESTIMONY RECEIVED",3);
+                embodied?.OathCompleted();
             }
         }
         void TickGateAnimation(float delta)
@@ -291,6 +300,7 @@ namespace Xiaoduan.Room3
             gateLeaves[0].localPosition=new Vector3(-1.3f-3*t,3,42);gateLeaves[1].localPosition=new Vector3(1.3f+3*t,3,42);
             if(gateAnimation>=1)oathBarrier.enabled=false;
         }
+        public void SetExternalModal(bool value){SetModal(value);}
         void SetModal(bool value)
         {
             if(modal==value)return;
@@ -321,6 +331,7 @@ namespace Xiaoduan.Room3
         {
             if(EndingChosen||!OathOpened||!CourtDecoded||!MedicalDecoded)return;
             EndingChosen=true;Ending=preserve?"preserve":"format";SetModal(true);ui.HideDecision();
+            embodied?.CommitEnding(preserve);
             cameraInterference.strength=0;cameraInterference.downwardDegrees=0;chromatic.intensity.value=0;
             if(preserve)StartCoroutine(Preserve());else StartCoroutine(Format());
         }

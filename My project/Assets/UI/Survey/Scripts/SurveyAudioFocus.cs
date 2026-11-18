@@ -24,6 +24,7 @@ namespace Xiaoduan.Survey
             voices.RemoveAll(v=>v.source==null);story=FindFirstObjectByType<Room3StoryFlow>();
             foreach(var source in FindObjectsByType<AudioSource>(FindObjectsSortMode.None))
             {
+                if(source.GetComponentInParent<Room3Soundscape>()!=null)continue;
                 if(source.transform.root==transform.root||(!source.loop&&source.spatialBlend<.1f&&(source.clip==null||!source.clip.name.Contains("MRI"))))continue;
                 if(!voices.Exists(v=>v.source==source))voices.Add(new Voice{source=source});
             }

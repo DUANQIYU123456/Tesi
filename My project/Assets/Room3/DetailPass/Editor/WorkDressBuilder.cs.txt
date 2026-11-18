@@ -1,0 +1,67 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine.Rendering;
+using Xiaoduan.Room3;
+if(EditorApplication.isPlaying)throw new Exception("Edit mode required");
+const string F="Assets/Room3/DetailPass/";
+Material Cloth(string name,Color color){var path=F+"Materials/"+name+".mat";var m=AssetDatabase.LoadAssetAtPath<Material>(path);if(m==null){m=new Material(Shader.Find("Xiaoduan/Room3/Archive textile"));AssetDatabase.CreateAsset(m,path);}m.SetColor("_BaseColor",color);m.SetFloat("_Wear",.45f);EditorUtility.SetDirty(m);return m;}
+var skirts=new[]{Cloth("Coal work wool",new Color(.065f,.073f,.069f)),Cloth("Slate work wool",new Color(.075f,.085f,.083f)),Cloth("Brown black work wool",new Color(.075f,.070f,.062f))};
+var aprons=new[]{Cloth("Unbleached worn cotton",new Color(.21f,.205f,.178f)),Cloth("Washed slate cotton",new Color(.14f,.16f,.15f)),Cloth("Ash work cotton",new Color(.19f,.19f,.172f))};
+var binding=Cloth("Folded cotton binding",new Color(.11f,.12f,.106f));
+int made=0,vertsTotal=0;
+var actors=Object.FindObjectsByType<RocketboxWitness>(FindObjectsSortMode.None).OrderBy(a=>a.name).ToArray();
+foreach(var actor in actors){var oldDress=actor.transform.Find("Layered work dress");if(oldDress!=null){var oldMesh=oldDress.GetComponent<SkinnedMeshRenderer>().sharedMesh;Object.DestroyImmediate(oldDress.gameObject);if(oldMesh!=null)AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(oldMesh));}}
+foreach(var actor in actors){
+ var oldRot=actor.joints.Select(j=>j.localRotation).ToArray();for(int i=0;i<actor.joints.Length;i++)actor.joints[i].localRotation=actor.bind[i];
+ var source=actor.GetComponentsInChildren<SkinnedMeshRenderer>().First();var baked=new Mesh();source.BakeMesh(baked);
+ var surface=baked.vertices.Select(p=>actor.transform.InverseTransformPoint(source.transform.TransformPoint(p))).ToArray();Object.DestroyImmediate(baked);
+ Transform Bone(string n)=>actor.joints.First(j=>j.name=="Bip01 "+n);
+ var bones=new[]{Bone("Pelvis"),Bone("Spine"),Bone("Spine1"),Bone("Spine2")};
+ var vs=new List<Vector3>();var uv=new List<Vector2>();var weights=new List<BoneWeight>();var tri=new[]{new List<int>(),new List<int>(),new List<int>()};
+ int Add(Vector3 p,Vector2 tex){
+  vs.Add(p);uv.Add(tex);float y=p.y;
+  int lo=0,hi=1;float t=Mathf.InverseLerp(.96f,1.09f,y);
+  if(y>1.09f){lo=1;hi=2;t=Mathf.InverseLerp(1.09f,1.21f,y);}if(y>1.21f){lo=2;hi=3;t=Mathf.InverseLerp(1.21f,1.36f,y);}
+  weights.Add(new BoneWeight{boneIndex0=lo,boneIndex1=hi,weight0=1-t,weight1=t});return vs.Count-1;
+ }
+ void Grid(int rows,int cols,int mat,Func<float,float,Vector3> point){int start=vs.Count;for(int y=0;y<=rows;y++)for(int x=0;x<=cols;x++)Add(point(y/(float)rows,x/(float)cols),new Vector2(x/(float)cols,y/(float)rows));for(int y=0;y<rows;y++)for(int x=0;x<cols;x++){int a=start+y*(cols+1)+x;tri[mat].AddRange(new[]{a,a+cols+1,a+1,a+1,a+cols+1,a+cols+2});}}
+ float hem=.19f+(actor.variation%3)*.022f;
+ var radii=new Vector2[21];
+ for(int r=0;r<=20;r++){
+  float t=r/20f,y=Mathf.Lerp(1.045f,hem,t);float rx=Mathf.Lerp(.19f,.315f,t),rz=Mathf.Lerp(.14f,.20f,t);
+  foreach(var p in surface)if(Mathf.Abs(p.y-y)<.045f&&Mathf.Abs(p.x)<.40f){rx=Mathf.Max(rx,Mathf.Abs(p.x)+.018f);rz=Mathf.Max(rz,Mathf.Abs(p.z)+.018f);}
+  radii[r]=new Vector2(rx,rz);
+ }
+ // Fit the body envelope without inheriting the source skirt's horizontal steps.
+ float waistX=radii[0].x,waistZ=radii[0].y;
+ float lowerX=Mathf.Max(.325f,radii.Max(r=>r.x)+.008f),lowerZ=Mathf.Max(.205f,radii.Max(r=>r.y)+.006f);
+ for(int r=0;r<=20;r++){float t=r/20f;float flare=Mathf.Pow(t,.78f);radii[r]=new Vector2(Mathf.Lerp(waistX,lowerX,flare),Mathf.Lerp(waistZ,lowerZ,flare));}
+ Vector2 Radius(float y){float index=Mathf.Clamp01(Mathf.InverseLerp(1.045f,hem,y))*20;int a=Mathf.Min(19,Mathf.FloorToInt(index));return Vector2.Lerp(radii[a],radii[a+1],index-a);}
+ float Depth(float y){float front=.11f;foreach(var p in surface)if(Mathf.Abs(p.y-y)<.055f&&Mathf.Abs(p.x)<.18f)front=Mathf.Max(front,p.z);return front;}
+ float[] front=new float[10];for(int i=0;i<10;i++)front[i]=Depth(1.0f+i*.04f);
+ float Front(float y){float t=Mathf.Clamp((y-1)/.04f,0,9);int a=Mathf.Min(8,Mathf.FloorToInt(t));return Mathf.Lerp(front[a],front[a+1],t-a);}
+ float Width(float y){return y>1.04f?Mathf.Lerp(.176f,.10f,Mathf.InverseLerp(1.04f,1.355f,y)):Mathf.Lerp(.255f,.176f,Mathf.InverseLerp(.31f,1.04f,y));}
+ float ApronZ(float y,float x){var radius=Radius(y);float z=y>1.04f?Front(y):radius.y;float rx=y>1.04f?.24f:radius.x;return z*Mathf.Sqrt(Mathf.Max(.22f,1-x*x/(rx*rx)))+.026f+Mathf.Sin(x*68+actor.variation)*.003f;}
+ Grid(20,56,0,(t,u)=>{float y=Mathf.Lerp(1.045f,hem,t),angle=u*Mathf.PI*2;var r=Radius(y);float fold=Mathf.Sin(angle*12+actor.variation*.36f)*.008f*Mathf.SmoothStep(0,1,t);return new Vector3((r.x+fold)*Mathf.Sin(angle),y+Mathf.Sin(angle*5+actor.variation)*.004f*t,(r.y+fold)*Mathf.Cos(angle));});
+ Grid(28,22,1,(t,u)=>{float y=Mathf.Lerp(.31f,1.355f,t);float x=(u*2-1)*Width(y);return new Vector3(x,y,ApronZ(y,x));});
+ // Actual folded edges, rather than a coarse alpha silhouette.
+ for(int side=-1;side<=1;side+=2)Grid(28,1,2,(t,u)=>{float y=Mathf.Lerp(.31f,1.355f,t);float x=side*(Width(y)-u*.007f);return new Vector3(x,y,ApronZ(y,x)+.0025f);});
+ Grid(1,22,2,(t,u)=>{float y=.31f+t*.008f,x=(u*2-1)*Width(y);return new Vector3(x,y,ApronZ(y,x)+.002f);});
+ // Waist tape and shoulder straps follow the same torso weights as the bib.
+ Grid(1,56,2,(t,u)=>{float y=1.015f+t*.035f,a=u*Mathf.PI*2;var r=Radius(y);return new Vector3((r.x+.006f)*Mathf.Sin(a),y,(r.y+.007f)*Mathf.Cos(a));});
+ foreach(int side in new[]{-1,1})Grid(14,1,1,(t,u)=>{float y=1.30f+Mathf.Sin(t*Mathf.PI)*.125f;float z=Mathf.Lerp(Front(1.30f)+.02f,-.14f,t);float x=side*(.10f+u*.026f);return new Vector3(x,y,z);});
+ if(actor.variation%2==0||actor.workStation){
+  Grid(5,10,1,(t,u)=>{float y=.72f+t*.15f,x=(u*2-1)*.085f;return new Vector3(x,y,ApronZ(y,x)+.007f);});
+  Grid(1,10,2,(t,u)=>{float y=.862f+t*.006f,x=(u*2-1)*.085f;return new Vector3(x,y,ApronZ(y,x)+.010f);});
+ }
+ var mesh=new Mesh{name="Work dress "+made};mesh.SetVertices(vs);mesh.SetUVs(0,uv);mesh.boneWeights=weights.ToArray();mesh.bindposes=bones.Select(b=>b.worldToLocalMatrix*actor.transform.localToWorldMatrix).ToArray();mesh.subMeshCount=3;
+ for(int i=0;i<3;i++)mesh.SetTriangles(tri[i],i);mesh.RecalculateNormals();mesh.RecalculateBounds();
+ AssetDatabase.CreateAsset(mesh,F+"Meshes/Work dress "+made+".asset");
+ var go=new GameObject("Layered work dress",typeof(SkinnedMeshRenderer));go.transform.SetParent(actor.transform,false);var cloth=go.GetComponent<SkinnedMeshRenderer>();cloth.sharedMesh=mesh;cloth.bones=bones;cloth.rootBone=bones[0];cloth.sharedMaterials=new[]{skirts[actor.variation%3],aprons[actor.variation%3],binding};cloth.quality=SkinQuality.Bone2;cloth.updateWhenOffscreen=true;cloth.localBounds=new Bounds(new Vector3(0,.85f,0),new Vector3(1.1f,1.8f,1.0f));cloth.shadowCastingMode=ShadowCastingMode.TwoSided;
+ for(int i=0;i<actor.joints.Length;i++)actor.joints[i].localRotation=oldRot[i];actor.Preview(0);EditorUtility.SetDirty(actor);made++;vertsTotal+=vs.Count;
+}
+AssetDatabase.SaveAssets();var scene=UnityEngine.SceneManagement.SceneManager.GetActiveScene();EditorSceneManager.MarkSceneDirty(scene);EditorSceneManager.SaveScene(scene);Room3Builder.Preview();return new{made,vertsTotal};

@@ -1,0 +1,72 @@
+[
+  {
+    "file": "Sources\\character\\base_body.glb",
+    "sha256": "b5b450af89f6fbf8debf387eda8da40cd0a8c3253a2d59871c730ce7e7f46469",
+    "bytes": 7234380
+  },
+  {
+    "file": "Sources\\character\\clothing_dress.glb",
+    "sha256": "038fc440ae3932ba0e26a74c3cdcc53d381978832f5ea0fb58ef45e8b5055e06",
+    "bytes": 737664
+  },
+  {
+    "file": "Sources\\character\\clothing_shirt.glb",
+    "sha256": "c3467876f712e63a901fa664b1d54eb0127c56d20888dbbb0a606973fd26e9cc",
+    "bytes": 605956
+  },
+  {
+    "file": "Sources\\character\\clothing_shoes.glb",
+    "sha256": "ea483876a6de5d51bf9fef16e1fd1e8957573398eab3321870d93af8c7dbc9a2",
+    "bytes": 847684
+  },
+  {
+    "file": "Sources\\character\\hair_bob01.glb",
+    "sha256": "e9c2561770cf806c17fc38d484c3d74238372a5f121d67f9c263bd0d211ba93c",
+    "bytes": 1971860
+  },
+  {
+    "file": "Sources\\character\\hair_bob02.glb",
+    "sha256": "6fda507823964a160c7552a9a8c283d6770a2944f1e24795026e42ba989aec7d",
+    "bytes": 1003028
+  },
+  {
+    "file": "Sources\\character\\hair_short02.glb",
+    "sha256": "eb341c197acf3948dac1f41f7722e9dad31018149541504a13ebcc8b6aa9d5aa",
+    "bytes": 1103288
+  },
+  {
+    "file": "Sources\\audio\\Organ A3.wav",
+    "sha256": "dc5ad93f22d343ea345d3964e7c7cf1d62a3229f8a2660c12a035473743470b2",
+    "bytes": 2188610
+  },
+  {
+    "file": "Sources\\audio\\Organ C2.wav",
+    "sha256": "6a45ea670fd525c8d9c6e26c2d0c0cf5248972b3aa9cc98521b826208aba03c7",
+    "bytes": 2169390
+  },
+  {
+    "file": "Sources\\audio\\Organ C3.wav",
+    "sha256": "1524a5631561e898617154a2f1b6bdc6fbdacb383549255d78d14eb53b588f8b",
+    "bytes": 2180642
+  },
+  {
+    "file": "Sources\\audio\\Female choir CC0.mp3",
+    "sha256": "17b6fb5b10b40bf24935a75430fb2e2a371a6d2bc51d85cc2ee7e454e81aa51d",
+    "bytes": 1523919
+  },
+  {
+    "file": "Sources\\audio\\Woman cough.mp3",
+    "sha256": "b56826931063d4e91f6e07de0477ea9e5d49cf9b8d95e810499a48846e787076",
+    "bytes": 233408
+  },
+  {
+    "file": "Sources\\audio\\Heavy plate.ogg",
+    "sha256": "112d4f93ddcc370b410630f971c0f5d991856102da9c76bc5c5540d388e75aaa",
+    "bytes": 10032
+  },
+  {
+    "file": "Sources\\audio\\Metal impact.ogg",
+    "sha256": "a96f879fec0864a8938e0c745b6996a6c5679c16a234ce31a01cc995e8401003",
+    "bytes": 7117
+  }
+]

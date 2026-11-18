@@ -42,7 +42,7 @@ Material:
     m_Ints: []
     m_Floats: []
     m_Colors:
-    - _FaceRect: {r: 0.71, g: 0.79, b: 0.205, a: 0.22}
+    - _FaceRect: {r: 0.5, g: 0.5, b: 1, a: 1}
     - _PaperTint: {r: 0.85, g: 0.78, b: 0.59, a: 1}
     - _WearRect: {r: 0.084, g: 0.019, b: 0.386, a: 0.452}
   m_BuildTextureStacks: []

@@ -1,0 +1,25 @@
+using UnityEngine;
+using UnityEditor;
+using System.Linq;
+var s=Object.FindFirstObjectByType<Xiaoduan.Room3.Room3ChromaticSequence>();var root=s.transform;
+s.sacredField.transform.localScale=new Vector3(140,140,1);
+foreach(var a in Object.FindObjectsByType<Xiaoduan.Room3.RocketboxWitness>(FindObjectsSortMode.None).Where(a=>!a.workStation&&a.variation<5))
+{var p=a.anchor;p.x=new[]{-1.9f,-.9f,.55f,1.4f,2.25f}[a.variation];a.anchor=p;a.Preview(0);}
+foreach(var l in Object.FindObjectsByType<Light>(FindObjectsSortMode.None))
+{if(l.name=="Corridor indirect")l.intensity=8;if(l.name.StartsWith("Work light "))l.intensity=12;}
+var warmPath="Assets/Room3/ColorSequence/Materials/Warm path marker.mat";var warm=AssetDatabase.LoadAssetAtPath<Material>(warmPath);if(warm==null){warm=new Material(Shader.Find("Universal Render Pipeline/Unlit"));AssetDatabase.CreateAsset(warm,warmPath);}warm.SetColor("_BaseColor",new Color(.38f,.31f,.15f));EditorUtility.SetDirty(warm);
+var coolPath="Assets/Room3/ColorSequence/Materials/Cold inset guide.mat";var cool=AssetDatabase.LoadAssetAtPath<Material>(coolPath);if(cool==null){cool=new Material(Shader.Find("Universal Render Pipeline/Unlit"));AssetDatabase.CreateAsset(cool,coolPath);}cool.SetColor("_BaseColor",new Color(.12f,.18f,.17f));EditorUtility.SetDirty(cool);
+var goldLights=new System.Collections.Generic.List<Light>();var goldMarkers=new System.Collections.Generic.List<Renderer>();
+void Guide(string name,Vector3 p,bool gold)
+{
+ var t=root.Find(name);if(t==null){var g=GameObject.CreatePrimitive(PrimitiveType.Cube);g.name=name;t=g.transform;t.SetParent(root,false);Object.DestroyImmediate(g.GetComponent<Collider>());}
+ t.position=p;t.localScale=new Vector3(.22f,.025f,.08f);var r=t.GetComponent<Renderer>();r.sharedMaterial=gold?warm:cool;r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
+ var lamp=root.Find(name+" bounce");if(lamp==null){lamp=new GameObject(name+" bounce",typeof(Light)).transform;lamp.SetParent(root,false);}lamp.position=p+Vector3.up*.38f;var l=lamp.GetComponent<Light>();l.type=LightType.Point;l.range=gold?4.2f:4.8f;l.shadows=LightShadows.None;l.intensity=gold?0:4.5f;l.color=gold?new Color(.96f,.96f,.86f):new Color(.48f,.62f,.62f);
+ if(gold){goldLights.Add(l);goldMarkers.Add(r);r.enabled=false;}
+}
+var coldPoints=new[]{new Vector3(-1,.04f,-12.5f),new Vector3(2,.04f,-12),new Vector3(5.5f,.04f,-8),new Vector3(5.5f,.04f,-3)};
+for(int i=0;i<coldPoints.Length;i++)Guide("Inset cold guide "+i,coldPoints[i],false);
+for(int i=0;i<5;i++)Guide("Retained path "+i,new Vector3(i%2==0?-.6f:.6f,.04f,48+i*12),true);
+s.goldPathLights=goldLights.ToArray();s.goldPathMarkers=goldMarkers.ToArray();
+if(!EditorApplication.isPlaying){AssetDatabase.SaveAssets();UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(s.gameObject.scene);UnityEditor.SceneManagement.EditorSceneManager.SaveScene(s.gameObject.scene);}
+return new {guides=coldPoints.Length,goldGuides=goldLights.Count,field=s.sacredField.transform.localScale.ToString()};

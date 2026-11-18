@@ -27,10 +27,20 @@ Material:
         m_Texture: {fileID: 2800000, guid: cf4259efc05000d42b6a6d802cbd2dbf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NormalMap:
+        m_Texture: {fileID: 2800000, guid: e6713f04e1a62964096c3390aeb54a1c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ORMMap:
+        m_Texture: {fileID: 2800000, guid: 0dcb13ead5c3f454b8c0043120d6688d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _NormalStrength: 0.32
+    - _Pathology: 0
     - _Smoothness: 0.18
-    - _TextureScale: 0.24
+    - _TextureScale: 0.32
     m_Colors:
     - _BaseColor: {r: 0.25, g: 0.29, b: 0.29, a: 1}
   m_BuildTextureStacks: []

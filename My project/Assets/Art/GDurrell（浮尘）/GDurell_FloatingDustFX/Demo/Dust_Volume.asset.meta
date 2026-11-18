@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 114ebd7b3f7a12a4db58bd9520cda1ed
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 418052
+  packageName: Floating Dust FX (URP)
+  packageVersion: 1.0
+  assetPath: Assets/GDurrell/GDurell_FloatingDustFX/Demo/Dust_Volume.asset
+  uploadId: 1025782

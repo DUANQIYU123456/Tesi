@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 34341a911eb2ae841b7a56fb59fe855e
+VisualEffectImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 418052
+  packageName: Floating Dust FX (URP)
+  packageVersion: 1.0
+  assetPath: Assets/GDurrell/GDurell_FloatingDustFX/Effects/VFX_FloatingDust.vfx
+  uploadId: 1025782

@@ -60,13 +60,16 @@ Shader "Xiaoduan/Spatial Scan URP"
                     float3 weights = pow(normal,8);
                     weights /= max(weights.x + weights.y + weights.z,0.0001);
                     float2 grid = Grid(world.yz) * weights.x + Grid(world.xz) * weights.y + Grid(world.xy) * weights.z;
-                    float architecture = lerp(0.4,1,smoothstep(0.72,0.98,max(normal.x,max(normal.y,normal.z))));
+                    float architecture = lerp(0.2,1,smoothstep(0.72,0.98,max(normal.x,max(normal.y,normal.z))));
                     float coordinate = dot(world - _XDScanOrigin.xyz, _XDScanDirection.xyz);
                     float behind = _XDScanTravel - coordinate;
                     float front = 1 - smoothstep(0,max(_XDScanBand,0.1),abs(behind));
-                    float tail = smoothstep(-0.15,0.15,behind) * exp(-max(behind,0) / max(_XDScanTail,0.1));
-                    float core = grid.x * architecture * (front * 3.5 + tail * 0.3);
-                    float halo = grid.y * architecture * (front * 0.18 + tail * 0.04);
+                    // Bound the afterimage in metres: distant surfaces must return fully to the original scene.
+                    float tailLength = max(_XDScanTail,0.1);
+                    float tail = smoothstep(-0.15,0.15,behind) * exp(-max(behind,0) / (tailLength * 0.42)) *
+                        (1 - smoothstep(tailLength * 0.6,tailLength,behind));
+                    float core = grid.x * architecture * (front * 2.2 + tail * 0.18);
+                    float halo = grid.y * architecture * (front * 0.12 + tail * 0.025);
                     scene.rgb += (_XDScanColor.rgb * (core + halo + front * 0.035) +
                         core * float3(0.2,0.2,0.2)) * _XDScanFade;
                 }

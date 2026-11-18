@@ -69,8 +69,8 @@ namespace Xiaoduan.Survey.Editor
    var status=Image("Identity plate",hud,new Vector2(0,1),new Vector2(302,-116),new Vector2(520,160),new Color(.01f,.025f,.02f,.65f));
    Perimeter(status.transform);
    ui.roomLabel=Text("Scene",status.transform,new Vector2(.5f,1),new Vector2(0,-28),new Vector2(476,32),24,White,"01 / THE TOWN");
-   ui.roleLabel=Text("Role",status.transform,new Vector2(.5f,1),new Vector2(0,-62),new Vector2(476,38),18,White,"RUOLO: PERITO DI SISTEMA");
-   ui.integrity=Text("Integrity label",status.transform,new Vector2(.5f,1),new Vector2(0,-102),new Vector2(476,24),17,Muted,"INTEGRITÀ 100%");
+   ui.roleLabel=Text("Role",status.transform,new Vector2(.5f,1),new Vector2(0,-62),new Vector2(476,38),18,White,"ROLE: SYSTEM SURVEYOR");
+   ui.integrity=Text("Integrity label",status.transform,new Vector2(.5f,1),new Vector2(0,-102),new Vector2(476,24),17,Muted,"INTEGRITY 100%");
    Image("Integrity track",status.transform,new Vector2(.5f,1),new Vector2(0,-134),new Vector2(476,3),new Color(.18f,.23f,.21f));
    ui.integrityFill=Image("Integrity remaining",status.transform,new Vector2(.5f,1),new Vector2(0,-134),new Vector2(476,3),Green);ui.integrityFill.type=UnityEngine.UI.Image.Type.Filled;ui.integrityFill.fillMethod=UnityEngine.UI.Image.FillMethod.Horizontal;
    ui.objective=Text("Objective",hud,new Vector2(0,1),new Vector2(302,-245),new Vector2(520,105),22,White,"");
@@ -86,7 +86,7 @@ namespace Xiaoduan.Survey.Editor
    var needleRoot=Rect("Detector needle",radar,new Vector2(.5f,.5f),Vector2.zero,Vector2.one);ui.needle=needleRoot;
    Image("Needle",needleRoot,new Vector2(.5f,.5f),new Vector2(0,24),new Vector2(2,49),Green);
    Image("Pin",radar,new Vector2(.5f,.5f),Vector2.zero,new Vector2(7,7),Green);
-   ui.cpm=Text("Simulated detector",radar,new Vector2(.5f,.5f),new Vector2(0,-40),new Vector2(94,39),15,Green,"0015\nSIM. CPM",TextAlignmentOptions.Center);
+   ui.cpm=Text("Simulated detector",radar,new Vector2(.5f,.5f),new Vector2(0,-40),new Vector2(94,39),15,Green,"0015\nSIMULATED CPM",TextAlignmentOptions.Center);
    ui.traceCount=Text("Collected traces",radar,new Vector2(.5f,.5f),new Vector2(0,-147),new Vector2(235,28),17,White,"TRACES 0 / 4",TextAlignmentOptions.Center);
    Text("Instrument identity",radar,new Vector2(.5f,.5f),new Vector2(0,-173),new Vector2(300,26),13,Muted,"UNDARK / RESIDUAL TRACES",TextAlignmentOptions.Center);
    // Decoder sits above the old [E] prompt rather than replacing target selection.
@@ -145,7 +145,7 @@ namespace Xiaoduan.Survey.Editor
    var slit=Image("Breathing green fracture",background.transform,new Vector2(.5f,.5f),new Vector2(0,65),new Vector2(4,690),new Color(.24f,.8f,.42f,.8f));ui.menuSlit=slit.rectTransform;
    Image("Soft fracture halo",slit.transform,new Vector2(.5f,.5f),Vector2.zero,new Vector2(60,700),new Color(.1f,.8f,.35f,.04f));
    var perimeter=Image("Bloodlines main frame",background.transform,new Vector2(.5f,.5f),Vector2.zero,new Vector2(1090,990),new Color(.26f,.67f,.39f,.8f),Load("Textures/Frame/Frame_main_menu.png"));
-   Text("Project title",background.transform,new Vector2(.5f,.5f),new Vector2(0,215),new Vector2(1040,160),68,White,"LUCE VERDE\nNELLE OSSA",TextAlignmentOptions.Center);
+   Text("Project title",background.transform,new Vector2(.5f,.5f),new Vector2(0,215),new Vector2(1040,160),68,White,"GREEN LIGHT\nIN THE BONES",TextAlignmentOptions.Center);
    Text("Menu subtitle",background.transform,new Vector2(.5f,.5f),new Vector2(0,73),new Vector2(700,70),20,Muted,"A RESIDUAL HISTORY / AN INTERACTIVE ARCHIVE",TextAlignmentOptions.Center);
    ui.startButton=Button("Begin inspection",background.transform,new Vector2(0,-120),new Vector2(540,86),"AVVIA ISPEZIONE / BEGIN INSPECTION");
    ui.menuMotionButton=Button("Menu reduced motion",background.transform,new Vector2(0,-230),new Vector2(410,54),"REDUCED MOTION [M]");

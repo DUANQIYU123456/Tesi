@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 444ab172f530f28438f7c585a5c7031f
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 418052
+  packageName: Floating Dust FX (URP)
+  packageVersion: 1.0
+  assetPath: Assets/GDurrell/GDurell_FloatingDustFX/Demo/DemoCameraMove.cs
+  uploadId: 1025782
